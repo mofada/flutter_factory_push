@@ -72,19 +72,19 @@
         </receiver>
 
         <!--自定义小米推送接收器-->
-<!--        <receiver-->
-<!--            android:name=".receiver.XiaoMiReceiver"-->
-<!--            android:exported="true">-->
-<!--            &lt;!&ndash;这里com.xiaomi.mipushdemo.DemoMessageRreceiver改成app中定义的完整类名&ndash;&gt;-->
-<!--            <intent-filter>-->
-<!--                <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />-->
-<!--            </intent-filter>-->
-<!--            <intent-filter>-->
-<!--                <action android:name="com.xiaomi.mipush.MESSAGE_ARRIVED" />-->
-<!--            </intent-filter>-->
-<!--            <intent-filter>-->
-<!--                <action android:name="com.xiaomi.mipush.ERROR" />-->
-<!--            </intent-filter>-->
-<!--        </receiver>-->
+        <receiver
+            android:name=".receiver.XiaoMiPushReceiver"
+            android:exported="true">
+            <!--这里com.xiaomi.mipushdemo.DemoMessageRreceiver改成app中定义的完整类名-->
+            <intent-filter>
+                <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.xiaomi.mipush.MESSAGE_ARRIVED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.xiaomi.mipush.ERROR" />
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

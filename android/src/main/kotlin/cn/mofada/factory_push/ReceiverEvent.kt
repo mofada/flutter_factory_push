@@ -5,8 +5,8 @@ import android.content.Context
 import android.content.IntentFilter
 import androidx.annotation.NonNull
 import cn.mofada.factory_push.constant.ChannelName
-import cn.mofada.factory_push.constant.XiaoMiPushConstant
-import cn.mofada.factory_push.receiver.XiaoMiReceiver
+import cn.mofada.factory_push.constant.PushIntent
+import cn.mofada.factory_push.receiver.MessageReceiver
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.PluginRegistry.Registrar
@@ -17,7 +17,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar
  * @date 2020/8/10
  * @description 推送
  */
-class MessageReceiverEvent(private val context: Context) : EventChannel.StreamHandler {
+class ReceiverEvent(private val context: Context) : EventChannel.StreamHandler {
 
     companion object {
         private lateinit var channel: EventChannel
@@ -27,15 +27,15 @@ class MessageReceiverEvent(private val context: Context) : EventChannel.StreamHa
          */
         fun registerWith(registrar: Registrar) {
             channel = EventChannel(registrar.messenger(), ChannelName.RECEIVER_PLUGIN.id)
-            channel.setStreamHandler(MessageReceiverEvent(registrar.context()))
+            channel.setStreamHandler(ReceiverEvent(registrar.context()))
         }
 
         /**
          * 初始化
          */
         fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-            val channel = EventChannel(flutterPluginBinding.flutterEngine.dartExecutor, ChannelName.RECEIVER_PLUGIN.id)
-            channel.setStreamHandler(MessageReceiverEvent(flutterPluginBinding.applicationContext))
+            channel = EventChannel(flutterPluginBinding.flutterEngine.dartExecutor, ChannelName.RECEIVER_PLUGIN.id)
+            channel.setStreamHandler(ReceiverEvent(flutterPluginBinding.applicationContext))
         }
 
         /**
@@ -48,26 +48,24 @@ class MessageReceiverEvent(private val context: Context) : EventChannel.StreamHa
 
     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
         //根据厂商进行判断
-        events?.let {
-            //创建推送广播
-            val tokenEventBroadcastReceiver: BroadcastReceiver = XiaoMiReceiver(it)
+        //创建推送广播
+        val broadcast: BroadcastReceiver = MessageReceiver(events)
 
-            //创建过滤器
-            val intentFilter = IntentFilter()
-            intentFilter.addAction(XiaoMiPushConstant.ACTION_RECEIVE_MESSAGE)
-            intentFilter.addAction(XiaoMiPushConstant.ACTION_MESSAGE_ARRIVED)
-            intentFilter.addAction(XiaoMiPushConstant.ACTION_ERROR)
+        //创建过滤器
+        val intentFilter = IntentFilter(PushIntent.ACTION_RECEIVER)
 
-            //创建广播
-            context.registerReceiver(
-                    tokenEventBroadcastReceiver,
-                    intentFilter
-            )
-        }
-
+        //创建广播
+        context.registerReceiver(
+                broadcast,
+                intentFilter
+        )
     }
 
+    /**
+     * 取消的时候, 一般来说在这里取消广播注册, 但是考虑离线接收广播, 不取消
+     */
     override fun onCancel(arguments: Any?) {
+
     }
 
 }

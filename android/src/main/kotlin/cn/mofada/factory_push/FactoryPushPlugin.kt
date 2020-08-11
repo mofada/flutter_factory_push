@@ -33,7 +33,7 @@ public class FactoryPushPlugin : FlutterPlugin, MethodCallHandler {
         context = flutterPluginBinding.applicationContext
 
         //初始化
-        MessageReceiverEvent.onAttachedToEngine(flutterPluginBinding)
+        ReceiverEvent.onAttachedToEngine(flutterPluginBinding)
     }
 
     companion object {
@@ -50,14 +50,14 @@ public class FactoryPushPlugin : FlutterPlugin, MethodCallHandler {
             pushPlugin.context = registrar.context().applicationContext
 
             //消息接收注册
-            MessageReceiverEvent.registerWith(registrar)
+            ReceiverEvent.registerWith(registrar)
         }
     }
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
         when (MethodName.valueOf(call.method)) {
-            MethodName.getPlatformVersion -> result.success("Android ${android.os.Build.VERSION.RELEASE}")
-            MethodName.setup -> PushMethodImplement.setup(context, call, result)
+            MethodName.GetPlatformVersion -> result.success("Android ${android.os.Build.VERSION.RELEASE}")
+            MethodName.Setup -> PushMethodImplement.setup(context, call, result)
             else -> result.notImplemented()
         }
     }
@@ -69,6 +69,6 @@ public class FactoryPushPlugin : FlutterPlugin, MethodCallHandler {
         channel.setMethodCallHandler(null)
 
         //插件销毁
-        MessageReceiverEvent.onDetachedFromEngine(binding)
+        ReceiverEvent.onDetachedFromEngine(binding)
     }
 }
