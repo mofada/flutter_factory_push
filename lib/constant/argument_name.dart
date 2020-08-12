@@ -5,8 +5,35 @@
 
 class ArgumentName {
   ///小米推送app id
-  static const String xiaomiAppId = "xiaomiAppId";
+  static const String xiaomiAppId = "xiaomi_app_id";
 
   ///小米推送app key
-  static const String xiaomiAppKey = "xiaomiAppKey";
+  static const String xiaomiAppKey = "xiaomi_app_key";
+
+  ///别名
+  static const String alias = "alias";
+
+  ///调试模式
+  static const String debugMode = "debugMode";
+
+  ///标签
+  static const String tag = "tag";
+
+  ///批量添加
+  static const String tags = "tags";
+
+  ///通知id
+  static const String notify_id = "notify_id";
+
+  ///开始时间
+  static const String startHour = "startHour";
+
+  ///开始分钟
+  static const String startMinter = "startMinter";
+
+  ///结束时间
+  static const String endHour = "endHour";
+
+  ///结束分钟
+  static const String endMinter = "endMinter";
 }

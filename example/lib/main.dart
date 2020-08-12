@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
-import 'dart:async';
-
-import 'package:flutter/services.dart';
 import 'package:factory_push/factory_push.dart';
+import 'package:factory_push_example/page/alias_page.dart';
+import 'package:factory_push_example/page/home_page.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,47 +13,29 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-
   @override
   void initState() {
     super.initState();
-    initPlatformState();
 
+    ///当接收到消息的时候
     FactoryPush.onPushReceiver((event) {
       print(event);
     });
 
+    ///初始化推送设置
     FactoryPush.setup(
         xiaomiAppId: "2882303761518576392", xiaomiAppKey: "5241857660392");
-  }
-
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    try {
-      platformVersion = await FactoryPush.platformVersion;
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
-        ),
-      ),
+      theme: ThemeData(primarySwatch: Colors.amber),
+      initialRoute: "/",
+      routes: <String, WidgetBuilder>{
+        "/": (context) => HomePage(),
+        "/alias": (context) => AliasPage(),
+      },
     );
   }
 }

@@ -20,21 +20,30 @@ enum class MethodName {
     Setup,
 
     /**
+     * 设置调试模式
+     */
+    SetDebugMode,
+
+    /**
      * 停止推送
      */
     StopPush,
 
     /**
      * 设置别名
-     * 小米: setAlias(Context context, String alias, String category)
      */
     SetAlias,
 
     /**
      * 取消别名
-     * 小米: unsetAlias(Context context, String alias, String category)
      */
     DeleteAlias,
+
+    /**
+     * 获取所有的别名
+     * 
+     */
+    GetAllAlias,
 
     /**
      * 清除所有别名
@@ -42,29 +51,26 @@ enum class MethodName {
     CleanAlias,
 
     /**
-     * 获取所有的别名
-     * 小米: getAllAlias(final Context context)
+     * 设置标签, 小米的叫主题
+     *
      */
-    GetAlias,
+    AddTag,
 
     /**
      * 设置标签, 小米的叫主题
-     * 小米: 为某个用户设置订阅主题, subscribe(Context context, String topic, String category)
      *
      */
-    SetTag,
+    AddTags,
 
     /**
      * 删除标签, 小米的叫主题
-     * 小米: unsubscribe(Context context, String topic, String category)
      */
     DeleteTag,
 
     /**
      * 获取所有标签, 小米的叫主题
-     * 小米: getAllTopic(final Context context)
      */
-    GetTags,
+    GetAllTag,
 
     /**
      * 清除所有的tag, 小米的叫主题
@@ -77,33 +83,34 @@ enum class MethodName {
     ClearNotification,
 
     /**
+     * 清除所有的通知
+     */
+    ClearAllNotification,
+
+    /**
      * 暂停通知
-     * 小米: pausePush(Context context, String category)
      */
     PausePush,
 
     /**
      * 恢复通知
-     * 小米: resumePush(Context context, String category)
      */
     ResumePush,
 
     /**
      * 启用推送
-     * 小米: enablePush(final Context context)
      */
     EnablePush,
 
     /**
      * 禁用推送
-     * 小米: disablePush(final Context context)
      */
     DisablePush,
 
     /**
      * 获取客户端的RegistrationId
      */
-    RegistrationId,
+    GetRegistrationId,
 
     /**
      * 设置推送时间
