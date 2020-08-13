@@ -1,6 +1,7 @@
 import 'package:factory_push/factory_push.dart';
 import 'package:factory_push_example/page/alias_page.dart';
 import 'package:factory_push_example/page/home_page.dart';
+import 'package:factory_push_example/page/tag_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -17,14 +18,10 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-    ///当接收到消息的时候
-    FactoryPush.onPushReceiver((event) {
-      print(event);
-    });
-
     ///初始化推送设置
     FactoryPush.setup(
         xiaomiAppId: "2882303761518576392", xiaomiAppKey: "5241857660392");
+    FactoryPush.setDebugMode(true);
   }
 
   @override
@@ -35,6 +32,7 @@ class _MyAppState extends State<MyApp> {
       routes: <String, WidgetBuilder>{
         "/": (context) => HomePage(),
         "/alias": (context) => AliasPage(),
+        "/tag": (context) => TagPage(),
       },
     );
   }

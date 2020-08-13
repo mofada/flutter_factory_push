@@ -19,6 +19,11 @@ import io.flutter.plugin.common.PluginRegistry.Registrar
  */
 class ReceiverEvent(private val context: Context) : EventChannel.StreamHandler {
 
+    /**
+     * 创建广播
+     */
+    private lateinit var broadcast: BroadcastReceiver
+
     companion object {
         private lateinit var channel: EventChannel
 
@@ -49,7 +54,7 @@ class ReceiverEvent(private val context: Context) : EventChannel.StreamHandler {
     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
         //根据厂商进行判断
         //创建推送广播
-        val broadcast: BroadcastReceiver = MessageReceiver(events)
+        broadcast = MessageReceiver(events)
 
         //创建过滤器
         val intentFilter = IntentFilter(PushIntent.ACTION_RECEIVER)
@@ -65,7 +70,7 @@ class ReceiverEvent(private val context: Context) : EventChannel.StreamHandler {
      * 取消的时候, 一般来说在这里取消广播注册, 但是考虑离线接收广播, 不取消
      */
     override fun onCancel(arguments: Any?) {
-
+        context.unregisterReceiver(broadcast)
     }
 
 }

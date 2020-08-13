@@ -8,13 +8,13 @@ import 'package:flutter/material.dart';
 /// @date : 2020/8/12 15:57
 /// @description : input your description
 
-class AliasPage extends StatefulWidget {
+class TagPage extends StatefulWidget {
   @override
-  _AliasPageState createState() => _AliasPageState();
+  _TagPageState createState() => _TagPageState();
 }
 
-class _AliasPageState extends State<AliasPage> {
-  List<String> _alias;
+class _TagPageState extends State<TagPage> {
+  List<String> _tags;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
@@ -22,7 +22,7 @@ class _AliasPageState extends State<AliasPage> {
   void initState() {
     super.initState();
 
-    refreshAlias();
+    refreshTag();
   }
 
   @override
@@ -30,40 +30,40 @@ class _AliasPageState extends State<AliasPage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text("别名设置"),
+        title: Text("标签设置"),
         actions: [
           IconButton(
-            tooltip: "清除所有设置的别名",
+            tooltip: "清除所有设置的标签",
             icon: Icon(Icons.clear_all),
             onPressed: () async {
-              await FactoryPush.cleanAlias();
+              await FactoryPush.cleanTag();
 
-              refreshAlias();
+              refreshTag();
             },
           )
         ],
       ),
-      body: _alias == null || _alias.isEmpty
+      body: _tags == null || _tags.isEmpty
           ? Center(
-              child: Text("暂未设置别名"),
+              child: Text("暂未设置标签"),
             )
           : RefreshIndicator(
-              onRefresh: refreshAlias,
+              onRefresh: refreshTag,
               child: ListView.separated(
                 itemBuilder: (BuildContext context, int index) => Dismissible(
                   key: UniqueKey(),
                   onDismissed: (DismissDirection direction) async {
-                    //删除别名
-                    await FactoryPush.deleteAlias(_alias[index]);
+                    //删除标签
+                    await FactoryPush.deleteTag(_tags[index]);
                     //移除列表
-                    _alias.removeAt(index);
+                    _tags.removeAt(index);
                     setState(() {});
                   },
                   confirmDismiss: (DismissDirection direction) async =>
                       direction != DismissDirection.startToEnd,
                   child: ListTile(
                     title: Text(
-                      _alias[index],
+                      _tags[index],
                       style: TextStyle(color: Colors.amber),
                     ),
                   ),
@@ -89,7 +89,7 @@ class _AliasPageState extends State<AliasPage> {
                 separatorBuilder: (BuildContext context, int index) => Divider(
                   height: 1,
                 ),
-                itemCount: _alias.length,
+                itemCount: _tags.length,
               ),
             ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -107,14 +107,14 @@ class _AliasPageState extends State<AliasPage> {
         await showDialog(context: context, builder: (context) => InputDialog());
     if (alias == null) return;
     //设置别名
-    await FactoryPush.setAlias(alias);
+    await FactoryPush.addTag(alias);
 
-    refreshAlias();
+    refreshTag();
   }
 
   ///初始化别名
-  Future refreshAlias() async {
-    final alias = await FactoryPush.getAllAlias();
+  Future refreshTag() async {
+    List<dynamic> alias = await FactoryPush.getAllTag();
     //List<dynamic> to List<String>
     /// 方式一
     //alias.map((e) => e as String).toList()
@@ -122,6 +122,6 @@ class _AliasPageState extends State<AliasPage> {
     /// https://dart.dev/guides/language/effective-dart/usage#dont-use-cast-when-a-nearby-operation-will-do
     //List<String>.from(alias)/alias.cast<String>()
 
-    setState(() => _alias = alias);
+    setState(() => _tags = List<String>.from(alias));
   }
 }

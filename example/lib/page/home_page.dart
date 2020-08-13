@@ -1,6 +1,7 @@
 import 'package:factory_push/factory_push.dart';
-import 'package:factory_push_example/widgets/tip_button.dart';
+import 'package:factory_push/bean/push_message_bean.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 /// @author : fada
 /// @email : fada@mofada.cn
@@ -13,60 +14,36 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String _platformVersion = 'Unknown';
-
   ///当前是否打开通知栏
   bool _isOpenNotification = false;
+
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
+  List<PushMessageBean> _messages = [];
 
   @override
   void initState() {
     super.initState();
 
-    initPlatformState();
-
     initNotificationStatus();
-  }
 
-  ///初始化平台设置
-  void initPlatformState() async {
-    var __platformVersion = await FactoryPush.platformVersion;
-    setState(() => _platformVersion = __platformVersion);
+    ///当接收到消息的时候
+    FactoryPush.onPushReceiver((message) {
+      print(message.toString());
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: const Text('厂商推送插件'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('当前运行在: $_platformVersion\n'),
-            TipButton(
-              tipMessage: "推送别名的增删改查",
-              text: "别名设置",
-              onPressed: () => Navigator.of(context).pushNamed("/alias"),
-            ),
-            TipButton(
-              tipMessage: "推送标签/主题的增删改查",
-              text: "标签设置",
-              onPressed: () {},
-            ),
-            TipButton(
-              tipMessage: "推送设置的暂停/恢复",
-              text: "推送开关",
-              onPressed: () {},
-            ),
-            TipButton(
-              tipMessage: "查看推送过来的消息",
-              text: "接收消息",
-              onPressed: () {},
-            ),
-          ],
-        ),
-      ),
+      body: ListView.separated(
+          itemBuilder: (BuildContext context, int index) {},
+          separatorBuilder: (BuildContext context, int index) {},
+          itemCount: _messages.length),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           FactoryPush.openNotification();
@@ -75,6 +52,60 @@ class _HomePageState extends State<HomePage> {
         child: Icon(_isOpenNotification
             ? Icons.notifications_active
             : Icons.notifications_off),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.amber,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    "厂商推送插件",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                    ),
+                  ),
+                  Text("国内厂商推送（小米/华为/魅族/ vivo / oppo）和极光推送")
+                ],
+              ),
+            ),
+            ListTile(
+              title: Text("别名设置"),
+              leading: Icon(Icons.healing),
+              onTap: () => Navigator.of(context).pushNamed("/alias"),
+            ),
+            ListTile(
+              title: Text("标签设置"),
+              leading: Icon(Icons.tag_faces),
+              onTap: () => Navigator.of(context).pushNamed("/tag"),
+            ),
+            ListTile(
+              title: Text("推送设置"),
+              leading: Icon(Icons.settings),
+              onTap: () => Navigator.of(context).pushNamed("/alias"),
+            ),
+            ListTile(
+              title: Text("客户端ID"),
+              leading: Icon(Icons.account_circle),
+              onTap: () async {
+                //获取
+                var registrationId = await FactoryPush.getRegistrationId();
+                Clipboard.setData(ClipboardData(text: registrationId));
+                //提示框
+                _scaffoldKey.currentState
+                    .showSnackBar(SnackBar(content: Text("客户端ID已复制到粘贴板")));
+                //关闭抽屉
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

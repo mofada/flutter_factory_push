@@ -10,10 +10,10 @@ enum class ChannelName(val id: String) {
     /**
      * 推送插件
      */
-    PUSH_PLUGIN("cn.mofada.factory_push"),
+    PUSH_PLUGIN("mofada.cn/factory_push"),
 
     /**
      * 广播接收插件
      */
-    RECEIVER_PLUGIN("cn.mofada.factory_push_receiver")
+    RECEIVER_PLUGIN("mofada.cn/factory_push_receiver")
 }

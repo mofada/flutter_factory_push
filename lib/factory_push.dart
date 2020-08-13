@@ -1,9 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:factory_push/bean/push_message_bean.dart';
 import 'package:factory_push/constant/argument_name.dart';
 import 'package:factory_push/constant/channel_name.dart';
 import 'package:factory_push/constant/method_name.dart';
 import 'package:flutter/services.dart';
+
+///当接收到消息的时候
+typedef OnMessageEvent = void Function(PushMessageBean messageBean);
 
 class FactoryPush {
   /// 方法通道
@@ -22,10 +27,14 @@ class FactoryPush {
   }
 
   /// 接收消息
-  static void onPushReceiver<T>(void onData(T event),
+  static void onPushReceiver<T>(OnMessageEvent onMessageEvent,
       {Function onError, void onDone(), bool cancelOnError}) {
-    _receiverEvent.receiveBroadcastStream().listen(onData,
-        onError: onError, onDone: onDone, cancelOnError: cancelOnError);
+    _receiverEvent.receiveBroadcastStream().listen((event) {
+      //解析实体
+      var message = PushMessageBean.fromJson(json.decode(event));
+      //接收消息
+      onMessageEvent(message);
+    }, onError: onError, onDone: onDone, cancelOnError: cancelOnError);
   }
 
   ///初始化设置
@@ -35,14 +44,14 @@ class FactoryPush {
   ///
   /// @param {String} [xiaomiAppId] 在开发者网站上注册时生成的，MiPush推送服务颁发给app的唯一认证标识
   /// @param {String} [xiaomiAppKey] 在开发者网站上注册时生成的，与appID相对应，用于验证appID是否合法
-  static void setup({String xiaomiAppId, String xiaomiAppKey}) {
+  static Future setup({String xiaomiAppId, String xiaomiAppKey}) async {
     Map<String, dynamic> arguments = <String, dynamic>{};
 
     ///小米参数
     arguments[ArgumentName.xiaomiAppId] = xiaomiAppId;
     arguments[ArgumentName.xiaomiAppKey] = xiaomiAppKey;
 
-    _channel.invokeMethod(MethodName.setup, arguments);
+    await _channel.invokeMethod(MethodName.setup, arguments);
   }
 
   ///
@@ -51,8 +60,10 @@ class FactoryPush {
   ///
   ///
   /// @param {bool} [debugMode] true: 开启调试模式, false: 关闭调试模式
-  static void setDebugMode(bool debugMode) => _channel.invokeMethod(
-      MethodName.setDebugMode, {ArgumentName.debugMode, debugMode});
+  static Future setDebugMode(bool debugMode) async {
+    await _channel.invokeMethod(
+        MethodName.setDebugMode, {ArgumentName.debugMode: debugMode});
+  }
 
   ///
   /// 关闭推送/注销推送
@@ -61,7 +72,9 @@ class FactoryPush {
   /// 调用了本 API 后，推送服务完全被停止。
   ///
   /// 小米: unregisterPush
-  static void stopPush() => _channel.invokeMethod(MethodName.stopPush);
+  static Future stopPush() async {
+    await _channel.invokeMethod(MethodName.stopPush);
+  }
 
   ///
   /// 设置别名
@@ -71,8 +84,10 @@ class FactoryPush {
   ///
   ///
   /// @param {String} [alias] 别名
-  static void setAlias(String alias) =>
-      _channel.invokeMethod(MethodName.setAlias, {ArgumentName.alias, alias});
+  static Future setAlias(String alias) async {
+    await _channel
+        .invokeMethod(MethodName.setAlias, {ArgumentName.alias: alias});
+  }
 
   ///
   /// 删除别名
@@ -82,19 +97,25 @@ class FactoryPush {
   ///
   ///
   /// @param {String} [alias] 别名
-  static void deleteAlias(String alias) =>
-      _channel.invokeMethod(MethodName.setAlias, {ArgumentName.alias, alias});
+  static Future deleteAlias(String alias) async {
+    await _channel
+        .invokeMethod(MethodName.deleteAlias, {ArgumentName.alias: alias});
+  }
 
   ///
   /// 获取客户端所有设置的别名
   ///
   /// 小米: getAllAlias(final Context context)
-  static Future<List<dynamic>> getAllAlias() =>
-      _channel.invokeMethod(MethodName.getAllAlias);
+  static Future<List<dynamic>> getAllAlias() async {
+    var alias = await _channel.invokeMethod(MethodName.getAllAlias);
+    return List<String>.from(alias);
+  }
 
   ///
   ///清客户端所设置的别名
-  static void cleanAlias() => _channel.invokeMethod(MethodName.cleanAlias);
+  static Future cleanAlias() async {
+    await _channel.invokeMethod(MethodName.cleanAlias);
+  }
 
   ///
   /// 为用户添加标签
@@ -104,13 +125,15 @@ class FactoryPush {
   ///
   ///
   /// @param {String} [tag] 标签/主题
-  static void addTag(String tag) =>
-      _channel.invokeMethod(MethodName.addTag, {ArgumentName.tag, tag});
+  static Future addTag(String tag) async {
+    await _channel.invokeMethod(MethodName.addTag, {ArgumentName.tag: tag});
+  }
 
   ///
   /// 批量添加标签, 小米中标签叫做主题
-  static void addTags(List<String> tags) =>
-      _channel.invokeMethod(MethodName.addTags, {ArgumentName.tags, tags});
+  static Future addTags(List<String> tags) async {
+    await _channel.invokeMethod(MethodName.addTags, {ArgumentName.tags: tags});
+  }
 
   ///
   /// 删除标签, 小米中标签叫做主题
@@ -119,19 +142,24 @@ class FactoryPush {
   ///
   ///
   /// @param {String} [tag] 标签/主题
-  static void deleteTag(String tag) =>
-      _channel.invokeMethod(MethodName.deleteTag, {ArgumentName.tag, tag});
+  static Future deleteTag(String tag) async {
+    await _channel.invokeMethod(MethodName.deleteTag, {ArgumentName.tag: tag});
+  }
 
   ///
   /// 获取所有的标签, 小米中标签叫做主题
   ///
   /// 小米: getAllTopic(final Context context)
-  static Future<List<dynamic>> getAllTag() =>
-      _channel.invokeMethod(MethodName.getAllTag);
+  static Future<List<dynamic>> getAllTag() async {
+    var tags = await _channel.invokeMethod(MethodName.getAllTag);
+    return List<String>.from(tags);
+  }
 
   ///
   ///清除所有的标签, 小米中标签叫做主题
-  static void cleanTag() => _channel.invokeMethod(MethodName.cleanTag);
+  static Future cleanTag() async {
+    await _channel.invokeMethod(MethodName.cleanTag);
+  }
 
   ///
   /// 清除通知
@@ -140,48 +168,62 @@ class FactoryPush {
   ///
   ///
   /// @param {int} [notifyId] 通知id
-  static void clearNotification(int notifyId) => _channel.invokeMethod(
-      MethodName.clearNotification, {ArgumentName.notify_id, notifyId});
+  static Future clearNotification(int notifyId) async {
+    await _channel.invokeMethod(
+        MethodName.clearNotification, {ArgumentName.notify_id: notifyId});
+  }
 
   ///
   /// 清除推送弹出的所有通知
   ///
   /// 小米: clearNotification(Context context)
-  static void clearAllNotification() =>
-      _channel.invokeMethod(MethodName.clearAllNotification);
+  static Future clearAllNotification() async {
+    await _channel.invokeMethod(MethodName.clearAllNotification);
+  }
 
   ///
   /// 暂停通知
   /// 暂停接收服务推送的消息，app在恢复推送服务之前，不接收任何推送消息
   ///
   /// 小米: pausePush(Context context, String category)
-  static void pausePush() => _channel.invokeMethod(MethodName.pausePush);
+  static Future pausePush() async {
+    await _channel.invokeMethod(MethodName.pausePush);
+  }
 
   ///
   /// 恢复通知
   /// 恢复接收MiPush服务推送的消息,这时服务器会把暂停时期的推送消息重新推送过来
   ///
   /// 小米: resumePush(Context context, String category)
-  static void resumePush() => _channel.invokeMethod(MethodName.resumePush);
+  static Future resumePush() async {
+    await _channel.invokeMethod(MethodName.resumePush);
+  }
 
   ///
   /// 启用推送服务
   ///
   /// 小米: enablePush(final Context context)
-  static void enablePush() => _channel.invokeMethod(MethodName.enablePush);
+  static Future enablePush() async {
+    await _channel.invokeMethod(MethodName.enablePush);
+  }
 
   ///
   /// 禁用推送服务
   ///
   /// 小米: disablePush(final Context context)
-  static void disablePush() => _channel.invokeMethod(MethodName.disablePush);
+  static Future disablePush() async {
+    await _channel.invokeMethod(MethodName.disablePush);
+  }
 
   ///
   /// 获取客户端的RegId
   ///
   /// 小米: getRegId(Context context)
-  static Future<String> getRegistrationId() =>
-      _channel.invokeMethod(MethodName.getRegistrationId);
+  static Future<String> getRegistrationId() async {
+    var registrationId =
+        await _channel.invokeMethod(MethodName.getRegistrationId);
+    return registrationId;
+  }
 
   ///
   /// 设置推送时间
@@ -194,18 +236,22 @@ class FactoryPush {
   /// @param {int} [startMinter] 接收时段开始时间的分钟
   /// @param {int} [endHour] 接收时段结束时间的分钟
   /// @param {int} [endMinter] 接收时段开始时间的小时
-  static void setPushTime(
-      int startHour, int startMinter, int endHour, int endMinter) {
-    _channel.invokeMethod(MethodName.getRegistrationId);
+  static Future setPushTime(
+      int startHour, int startMinter, int endHour, int endMinter) async {
+    await _channel.invokeMethod(MethodName.getRegistrationId);
   }
 
   ///
   /// 判断是否开启通知栏
-  static Future<bool> isNotificationEnabled() =>
-      _channel.invokeMethod(MethodName.isNotificationEnabled);
+  static Future<bool> isNotificationEnabled() async {
+    var isNotificationEnable =
+        await _channel.invokeMethod(MethodName.isNotificationEnabled);
+    return isNotificationEnable;
+  }
 
   ///
   /// 前往设置界面打开通知栏
-  static void openNotification() =>
-      _channel.invokeMethod(MethodName.openNotification);
+  static Future openNotification() async {
+    await _channel.invokeMethod(MethodName.openNotification);
+  }
 }

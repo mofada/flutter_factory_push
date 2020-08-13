@@ -3,7 +3,7 @@ import UIKit
 
 public class SwiftFactoryPushPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "factory_push", binaryMessenger: registrar.messenger())
+    let channel = FlutterMethodChannel(name: "mofada.cn/factory_push", binaryMessenger: registrar.messenger())
     let instance = SwiftFactoryPushPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
   }

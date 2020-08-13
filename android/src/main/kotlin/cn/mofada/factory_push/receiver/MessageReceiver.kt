@@ -21,7 +21,7 @@ class MessageReceiver(private val events: EventChannel.EventSink?) : BroadcastRe
     }
 
     companion object {
-        fun sendIntent(context: Context,  pushMessageBean: PushMessageBean) {
+        fun sendIntent(context: Context, pushMessageBean: PushMessageBean) {
             val intent = Intent()
             intent.action = PushIntent.ACTION_RECEIVER
             //接收的结果

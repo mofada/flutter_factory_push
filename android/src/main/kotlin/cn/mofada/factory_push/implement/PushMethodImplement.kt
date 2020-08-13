@@ -35,6 +35,7 @@ object PushMethodImplement {
             val xiaomiAppKey = call.argument<String>(ArgumentName.XIAOMI_APP_KEY)
             XiaoMiPushImplement.setup(context, xiaomiAppId!!, xiaomiAppKey!!)
         }
+        result.success(null)
     }
 
     /**
@@ -46,6 +47,7 @@ object PushMethodImplement {
         when {
             FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.setDebugMode(context, debugMode)
         }
+        result.success(null)
     }
 
 
@@ -53,11 +55,12 @@ object PushMethodImplement {
      * 停止推送
      * 小米: unregisterPush(Context context)
      */
-    fun stopPush(context: Context) {
+    fun stopPush(context: Context,call: MethodCall, result: MethodChannel.Result) {
         //小米推送
         when {
             FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.stopPush(context)
         }
+        result.success(null)
     }
 
 
@@ -74,6 +77,7 @@ object PushMethodImplement {
         when {
             FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.setAlias(context, alias!!)
         }
+        result.success(null)
     }
 
     /**
@@ -88,6 +92,7 @@ object PushMethodImplement {
         when {
             FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.deleteAlias(context, alias!!)
         }
+        result.success(null)
     }
 
     /**
@@ -102,10 +107,11 @@ object PushMethodImplement {
     /**
      * 清除所有别名
      */
-    fun cleanAlias(context: Context) {
+    fun cleanAlias(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
             FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.cleanAlias(context)
         }
+        result.success(null)
     }
 
     /**
@@ -121,6 +127,7 @@ object PushMethodImplement {
         when {
             FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.addTag(context, tag!!)
         }
+        result.success(null)
     }
 
     /**
@@ -136,6 +143,7 @@ object PushMethodImplement {
         when {
             FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.addTags(context, tags!!)
         }
+        result.success(null)
     }
 
     /**
@@ -151,6 +159,7 @@ object PushMethodImplement {
         when {
             FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.deleteTag(context, tag!!)
         }
+        result.success(null)
     }
 
     /**
@@ -165,10 +174,11 @@ object PushMethodImplement {
     /**
      * 清除所有的标签
      */
-    fun cleanTag(context: Context) {
+    fun cleanTag(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
             FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.clearTag(context)
         }
+        result.success(null)
     }
 
     /**
@@ -183,51 +193,57 @@ object PushMethodImplement {
         when {
             FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.clearNotification(context, notifyId!!)
         }
+        result.success(null)
     }
 
     /**
      * 清除所有的通知
      */
-    fun clearAllNotification(context: Context) {
+    fun clearAllNotification(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
             FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.clearAllNotification(context)
         }
+        result.success(null)
     }
 
     /**
      * 暂停推送
      */
-    fun pausePush(context: Context) {
+    fun pausePush(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
             FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.pausePush(context)
         }
+        result.success(null)
     }
 
     /**
      * 恢复推送
      */
-    fun resumePush(context: Context) {
+    fun resumePush(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
             FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.resumePush(context)
         }
+        result.success(null)
     }
 
     /**
      * 启用推送服务。
      */
-    fun enablePush(context: Context) {
+    fun enablePush(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
             FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.enablePush(context)
         }
+        result.success(null)
     }
 
     /**
      * 禁用推送服务。
      */
-    fun disablePush(context: Context) {
+    fun disablePush(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
             FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.disablePush(context)
         }
+        result.success(null)
     }
 
     /**
@@ -331,5 +347,7 @@ object PushMethodImplement {
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
+
+        result.success(null)
     }
 }

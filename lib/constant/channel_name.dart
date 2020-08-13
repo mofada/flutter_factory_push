@@ -5,8 +5,8 @@
 
 class ChannelName {
   ///推送插件
-  static const push_plugin = "cn.mofada.factory_push";
+  static const push_plugin = "mofada.cn/factory_push";
 
   ///推送接收插件
-  static const receiver_plugin = "cn.mofada.factory_push_receiver";
+  static const receiver_plugin = "mofada.cn/factory_push_receiver";
 }

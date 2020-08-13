@@ -46,11 +46,11 @@ class XiaoMiPushReceiver : PushMessageReceiver() {
      */
     private fun messageToPushMessageBean(method: MessageType, miPushMessage: MiPushMessage): PushMessageBean {
         return PushMessageBean(
+                messageId = miPushMessage.messageId,
                 messageType = method,
+                notifyId = miPushMessage.notifyId,
                 title = miPushMessage.title,
-                content = miPushMessage.content,
-                description = miPushMessage.description,
-                alias = miPushMessage.alias,
+                message = miPushMessage.description,
                 extra = miPushMessage.extra,
                 category = miPushMessage.category
         )

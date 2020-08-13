@@ -5,6 +5,7 @@ import android.util.Log
 import com.xiaomi.channel.commonutils.logger.LoggerInterface
 import com.xiaomi.mipush.sdk.Logger
 import com.xiaomi.mipush.sdk.MiPushClient
+import io.flutter.plugin.common.MethodChannel
 
 
 /**
