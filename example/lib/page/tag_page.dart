@@ -38,6 +38,9 @@ class _TagPageState extends State<TagPage> {
             onPressed: () async {
               await FactoryPush.cleanTag();
 
+              ///清除完成要过一两秒才能查到
+              await Future.delayed(Duration(seconds: 1));
+
               refreshTag();
             },
           )
@@ -101,20 +104,23 @@ class _TagPageState extends State<TagPage> {
     );
   }
 
-  ///设置别名
+  ///设置标签
   setAlias() async {
-    var alias =
+    var tag =
         await showDialog(context: context, builder: (context) => InputDialog());
-    if (alias == null) return;
+    if (tag == null) return;
     //设置别名
-    await FactoryPush.addTag(alias);
+    await FactoryPush.addTag(tag);
+
+    ///设置完成要过一两秒才能查到
+    await Future.delayed(Duration(seconds: 1));
 
     refreshTag();
   }
 
-  ///初始化别名
+  ///初始化标签
   Future refreshTag() async {
-    List<dynamic> alias = await FactoryPush.getAllTag();
+    List<String> alias = await FactoryPush.getAllTag();
     //List<dynamic> to List<String>
     /// 方式一
     //alias.map((e) => e as String).toList()
@@ -122,6 +128,6 @@ class _TagPageState extends State<TagPage> {
     /// https://dart.dev/guides/language/effective-dart/usage#dont-use-cast-when-a-nearby-operation-will-do
     //List<String>.from(alias)/alias.cast<String>()
 
-    setState(() => _tags = List<String>.from(alias));
+    setState(() => _tags = alias);
   }
 }

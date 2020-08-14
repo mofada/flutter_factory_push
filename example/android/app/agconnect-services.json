@@ -1,0 +1,12 @@
+{
+	"client":{
+		"cp_id":"80086000024604883",
+		"product_id":"736430079244601233",
+		"client_id":"428816725203485696",
+		"client_secret":"2CBBDE7B27F2737FCA0A6AF3A3B51D1F602C0BB85509E57A2FF98F7802F9A548",
+		"app_id":"102736937",
+		"package_name":"cn.mofada.factory_push_example",
+		"api_key":"CgB6e3x97vMlmUAHc4OK5YLqqmSv3QehMpqA7FlIt688qtmgBaTqvZAoLtJeDC8kMhXc/NYpL5zFSq+qb/maRYRl"
+	},
+	"configuration_version":"1.0"
+}

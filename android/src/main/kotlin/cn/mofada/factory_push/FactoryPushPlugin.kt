@@ -80,6 +80,7 @@ public class FactoryPushPlugin : FlutterPlugin, MethodCallHandler {
             MethodName.SetPushTime -> PushMethodImplement.setPushTime(context, call, result)
             MethodName.IsNotificationEnabled -> PushMethodImplement.isNotificationEnabled(context, call, result)
             MethodName.OpenNotification -> PushMethodImplement.openNotification(context, call, result)
+            MethodName.Manufacturer -> PushMethodImplement.manufacturer(context, call, result)
         }
     }
 

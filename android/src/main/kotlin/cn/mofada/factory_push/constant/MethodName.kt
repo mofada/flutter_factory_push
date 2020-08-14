@@ -126,4 +126,9 @@ enum class MethodName {
      * 前往通知打开界面
      */
     OpenNotification,
+
+    /**
+     * 手机厂商类型
+     */
+    Manufacturer,
 }

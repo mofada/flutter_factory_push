@@ -7,7 +7,7 @@ import android.os.Build
 import android.provider.Settings
 import androidx.core.app.NotificationManagerCompat
 import cn.mofada.factory_push.constant.ArgumentName
-import cn.mofada.factory_push.util.FactoryUtil
+import cn.mofada.factory_push.util.ManufacturerUtil
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
@@ -26,14 +26,20 @@ object PushMethodImplement {
      */
     fun setup(context: Context, call: MethodCall, result: MethodChannel.Result) {
         //如果是小米手机, 并且有小米的id和key
-        if (FactoryUtil.isXIAOMI() ||
-                call.hasArgument(ArgumentName.XIAOMI_APP_ID) ||
+        if (ManufacturerUtil.isXIAOMI() &&
+                call.hasArgument(ArgumentName.XIAOMI_APP_ID) &&
                 call.hasArgument(ArgumentName.XIAOMI_APP_KEY)) {
             //应用id
-            val xiaomiAppId = call.argument<String>(ArgumentName.XIAOMI_APP_ID)
+            val appId = call.argument<String>(ArgumentName.XIAOMI_APP_ID)
             //应用key
-            val xiaomiAppKey = call.argument<String>(ArgumentName.XIAOMI_APP_KEY)
-            XiaoMiPushImplement.setup(context, xiaomiAppId!!, xiaomiAppKey!!)
+            val appKey = call.argument<String>(ArgumentName.XIAOMI_APP_KEY)
+            XiaoMiPushImplement.setup(context, appId!!, appKey!!)
+        }
+        //华为手机, 华为推送
+        if (ManufacturerUtil.isHUAWEI() ||
+                call.hasArgument(ArgumentName.HUAWEI_APP_ID)) {
+            val appid = call.argument<String>(ArgumentName.XIAOMI_APP_KEY)
+            HuaWeiPushImplement.setup(context, appid!!)
         }
         result.success(null)
     }
@@ -45,7 +51,7 @@ object PushMethodImplement {
         val debugMode = call.argument<Boolean>(ArgumentName.DEBUG_MODE) ?: false
         //小米推送
         when {
-            FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.setDebugMode(context, debugMode)
+            ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.setDebugMode(context, debugMode)
         }
         result.success(null)
     }
@@ -55,10 +61,10 @@ object PushMethodImplement {
      * 停止推送
      * 小米: unregisterPush(Context context)
      */
-    fun stopPush(context: Context,call: MethodCall, result: MethodChannel.Result) {
+    fun stopPush(context: Context, call: MethodCall, result: MethodChannel.Result) {
         //小米推送
         when {
-            FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.stopPush(context)
+            ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.stopPush(context)
         }
         result.success(null)
     }
@@ -75,7 +81,7 @@ object PushMethodImplement {
         }
         val alias = call.argument<String>(ArgumentName.ALIAS)
         when {
-            FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.setAlias(context, alias!!)
+            ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.setAlias(context, alias!!)
         }
         result.success(null)
     }
@@ -90,7 +96,7 @@ object PushMethodImplement {
         }
         val alias = call.argument<String>(ArgumentName.ALIAS)
         when {
-            FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.deleteAlias(context, alias!!)
+            ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.deleteAlias(context, alias!!)
         }
         result.success(null)
     }
@@ -100,7 +106,7 @@ object PushMethodImplement {
      */
     fun getAllAlias(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
-            FactoryUtil.isXIAOMI() -> result.success(XiaoMiPushImplement.getAllAlias(context))
+            ManufacturerUtil.isXIAOMI() -> result.success(XiaoMiPushImplement.getAllAlias(context))
         }
     }
 
@@ -109,7 +115,7 @@ object PushMethodImplement {
      */
     fun cleanAlias(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
-            FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.cleanAlias(context)
+            ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.cleanAlias(context)
         }
         result.success(null)
     }
@@ -125,7 +131,8 @@ object PushMethodImplement {
         }
         val tag = call.argument<String>(ArgumentName.TAG)
         when {
-            FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.addTag(context, tag!!)
+            ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.addTag(context, tag!!)
+            ManufacturerUtil.isHUAWEI() -> HuaWeiPushImplement.addTag(context, tag!!)
         }
         result.success(null)
     }
@@ -141,7 +148,7 @@ object PushMethodImplement {
         }
         val tags = call.argument<List<String>>(ArgumentName.TAGS)
         when {
-            FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.addTags(context, tags!!)
+            ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.addTags(context, tags!!)
         }
         result.success(null)
     }
@@ -157,7 +164,7 @@ object PushMethodImplement {
         }
         val tag = call.argument<String>(ArgumentName.TAG)
         when {
-            FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.deleteTag(context, tag!!)
+            ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.deleteTag(context, tag!!)
         }
         result.success(null)
     }
@@ -167,7 +174,7 @@ object PushMethodImplement {
      */
     fun getAllTag(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
-            FactoryUtil.isXIAOMI() -> result.success(XiaoMiPushImplement.getAllTag(context))
+            ManufacturerUtil.isXIAOMI() -> result.success(XiaoMiPushImplement.getAllTag(context))
         }
     }
 
@@ -176,7 +183,7 @@ object PushMethodImplement {
      */
     fun cleanTag(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
-            FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.clearTag(context)
+            ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.clearTag(context)
         }
         result.success(null)
     }
@@ -191,7 +198,7 @@ object PushMethodImplement {
         }
         val notifyId = call.argument<Int>(ArgumentName.NOTIFY_ID)
         when {
-            FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.clearNotification(context, notifyId!!)
+            ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.clearNotification(context, notifyId!!)
         }
         result.success(null)
     }
@@ -201,7 +208,7 @@ object PushMethodImplement {
      */
     fun clearAllNotification(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
-            FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.clearAllNotification(context)
+            ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.clearAllNotification(context)
         }
         result.success(null)
     }
@@ -211,7 +218,7 @@ object PushMethodImplement {
      */
     fun pausePush(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
-            FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.pausePush(context)
+            ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.pausePush(context)
         }
         result.success(null)
     }
@@ -221,7 +228,7 @@ object PushMethodImplement {
      */
     fun resumePush(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
-            FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.resumePush(context)
+            ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.resumePush(context)
         }
         result.success(null)
     }
@@ -231,7 +238,7 @@ object PushMethodImplement {
      */
     fun enablePush(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
-            FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.enablePush(context)
+            ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.enablePush(context)
         }
         result.success(null)
     }
@@ -241,7 +248,7 @@ object PushMethodImplement {
      */
     fun disablePush(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
-            FactoryUtil.isXIAOMI() -> XiaoMiPushImplement.disablePush(context)
+            ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.disablePush(context)
         }
         result.success(null)
     }
@@ -251,7 +258,7 @@ object PushMethodImplement {
      */
     fun getRegistrationId(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
-            FactoryUtil.isXIAOMI() -> result.success(XiaoMiPushImplement.getRegistrationId(context))
+            ManufacturerUtil.isXIAOMI() -> result.success(XiaoMiPushImplement.getRegistrationId(context))
         }
     }
 
@@ -285,7 +292,7 @@ object PushMethodImplement {
         val endMinter = call.argument<Int>(ArgumentName.END_MINTER)
 
         when {
-            FactoryUtil.isXIAOMI() -> result.success(XiaoMiPushImplement.setPushTime(context, startHour!!, startMinter!!, endHour!!, endMinter!!))
+            ManufacturerUtil.isXIAOMI() -> result.success(XiaoMiPushImplement.setPushTime(context, startHour!!, startMinter!!, endHour!!, endMinter!!))
         }
     }
 
@@ -349,5 +356,20 @@ object PushMethodImplement {
         context.startActivity(intent)
 
         result.success(null)
+    }
+
+    /**
+     * 获取手机厂商类型
+     */
+    fun manufacturer(context: Context, call: MethodCall, result: MethodChannel.Result) {
+        val manufacturer = when {
+            ManufacturerUtil.isXIAOMI() -> ManufacturerUtil.MANUFACTURER_XIAOMI
+            ManufacturerUtil.isHUAWEI() -> ManufacturerUtil.MANUFACTURER_HUAWEI
+            ManufacturerUtil.isMEIZU() -> ManufacturerUtil.MANUFACTURER_MEIZU
+            ManufacturerUtil.isOPPO() -> ManufacturerUtil.MANUFACTURER_OPPO
+            ManufacturerUtil.isVIVO() -> ManufacturerUtil.MANUFACTURER_VIVO
+            else -> ManufacturerUtil.MANUFACTURER_OTHER
+        }
+        result.success(manufacturer)
     }
 }

@@ -10,6 +10,9 @@ class ArgumentName {
   ///小米推送app key
   static const String xiaomiAppKey = "xiaomi_app_key";
 
+  ///华为推送app id
+  static const String huaweiAppId = "huawei_app_id";
+
   ///别名
   static const String alias = "alias";
 

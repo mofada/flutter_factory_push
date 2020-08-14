@@ -3,6 +3,8 @@
 /// @date : 2020/8/13 17:06
 /// @description : 消息封装实体类
 
+part of "../factory_push.dart";
+
 class PushMessageBean {
   ///消息id
   final String messageId;

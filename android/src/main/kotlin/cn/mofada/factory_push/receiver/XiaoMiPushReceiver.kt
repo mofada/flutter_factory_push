@@ -38,7 +38,7 @@ class XiaoMiPushReceiver : PushMessageReceiver() {
      * 或者自启动白名单中，才可以通过此方法接受到该消息。详细说明请参照3.4.23。
      */
     override fun onNotificationMessageArrived(context: Context, miPushMessage: MiPushMessage) {
-        MessageReceiver.sendIntent(context, messageToPushMessageBean(MessageType.MessageArrived, miPushMessage))
+        MessageReceiver.sendIntent(context, messageToPushMessageBean(MessageType.MessageReceiver, miPushMessage))
     }
 
     /**

@@ -18,6 +18,11 @@ object ArgumentName {
     const val XIAOMI_APP_KEY = "xiaomi_app_key";
 
     /**
+     * 华为appid
+     */
+    const val HUAWEI_APP_ID = "huawei_app_id";
+
+    /**
      * 别名
      */
     const val ALIAS = "alias"

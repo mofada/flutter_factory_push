@@ -1,9 +1,10 @@
+import 'package:factory_push/constant/channel_name.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:factory_push/factory_push.dart';
 
 void main() {
-  const MethodChannel channel = MethodChannel('factory_push');
+  const MethodChannel channel = MethodChannel(ChannelName.push_plugin);
 
   TestWidgetsFlutterBinding.ensureInitialized();
 

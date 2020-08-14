@@ -1,6 +1,7 @@
 import 'package:factory_push/factory_push.dart';
 import 'package:factory_push_example/page/alias_page.dart';
 import 'package:factory_push_example/page/home_page.dart';
+import 'package:factory_push_example/page/setting_page.dart';
 import 'package:factory_push_example/page/tag_page.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +21,9 @@ class _MyAppState extends State<MyApp> {
 
     ///初始化推送设置
     FactoryPush.setup(
-        xiaomiAppId: "2882303761518576392", xiaomiAppKey: "5241857660392");
+        xiaomiAppId: "2882303761518576392",
+        xiaomiAppKey: "5241857660392",
+        huaweiAppId: "102736937");
     FactoryPush.setDebugMode(true);
   }
 
@@ -33,6 +36,7 @@ class _MyAppState extends State<MyApp> {
         "/": (context) => HomePage(),
         "/alias": (context) => AliasPage(),
         "/tag": (context) => TagPage(),
+        "/setting": (context) => SettingPage(),
       },
     );
   }

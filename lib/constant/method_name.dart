@@ -87,4 +87,7 @@ class MethodName {
 
   ///打开通知设置界面
   static const openNotification = "OpenNotification";
+
+  ///获取手机厂商
+  static const manufacturer = "Manufacturer";
 }

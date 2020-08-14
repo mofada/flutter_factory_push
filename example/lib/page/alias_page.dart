@@ -38,6 +38,9 @@ class _AliasPageState extends State<AliasPage> {
             onPressed: () async {
               await FactoryPush.cleanAlias();
 
+              ///清除完成要过一两秒才能查到
+              await Future.delayed(Duration(seconds: 1));
+
               refreshAlias();
             },
           )
@@ -108,6 +111,9 @@ class _AliasPageState extends State<AliasPage> {
     if (alias == null) return;
     //设置别名
     await FactoryPush.setAlias(alias);
+
+    ///设置完成要过一两秒才能查到
+    await Future.delayed(Duration(seconds: 1));
 
     refreshAlias();
   }

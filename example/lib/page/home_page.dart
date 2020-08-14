@@ -1,5 +1,4 @@
 import 'package:factory_push/factory_push.dart';
-import 'package:factory_push/bean/push_message_bean.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -17,6 +16,8 @@ class _HomePageState extends State<HomePage> {
   ///当前是否打开通知栏
   bool _isOpenNotification = false;
 
+  String _manufacturer;
+
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   List<PushMessageBean> _messages = [];
@@ -27,9 +28,12 @@ class _HomePageState extends State<HomePage> {
 
     initNotificationStatus();
 
+    initManufacturer();
+
     ///当接收到消息的时候
     FactoryPush.onPushReceiver((message) {
-      print(message.toString());
+      _messages.add(message);
+      setState(() {});
     });
   }
 
@@ -40,10 +44,31 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text('厂商推送插件'),
       ),
-      body: ListView.separated(
-          itemBuilder: (BuildContext context, int index) {},
-          separatorBuilder: (BuildContext context, int index) {},
-          itemCount: _messages.length),
+      body: _messages.isEmpty
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "目前暂无消息",
+                      style: TextStyle(color: Colors.amber, fontSize: 24),
+                    ),
+                  ),
+                  Text(
+                    "请前往开发者后台推送消息吧!",
+                    style: TextStyle(color: Colors.amber, fontSize: 20),
+                  ),
+                ],
+              ),
+            )
+          : ListView.separated(
+              itemBuilder: (BuildContext context, int index) => ListTile(
+                    title: Text(_messages[index].title),
+                  ),
+              separatorBuilder: (BuildContext context, int index) => Divider(),
+              itemCount: _messages.length),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           FactoryPush.openNotification();
@@ -64,12 +89,38 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text(
-                    "厂商推送插件",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 30,
-                    ),
+                  Row(
+                    children: [
+                      Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Colors.amberAccent,
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        width: 50,
+                        height: 50,
+                        child: Text(
+                          _manufacturer == null
+                              ? "?"
+                              : _manufacturer.substring(0, 1),
+                          style: TextStyle(color: Colors.amber, fontSize: 30),
+                          strutStyle:
+                              StrutStyle(fontSize: 30, forceStrutHeight: true),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Text(
+                        "$_manufacturer手机",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold),
+                        strutStyle:
+                            StrutStyle(fontSize: 40, forceStrutHeight: true),
+                      ),
+                    ],
                   ),
                   Text("国内厂商推送（小米/华为/魅族/ vivo / oppo）和极光推送")
                 ],
@@ -88,7 +139,7 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               title: Text("推送设置"),
               leading: Icon(Icons.settings),
-              onTap: () => Navigator.of(context).pushNamed("/alias"),
+              onTap: () => Navigator.of(context).pushNamed("/setting"),
             ),
             ListTile(
               title: Text("客户端ID"),
@@ -108,6 +159,32 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  ///获取手机厂商
+  initManufacturer() async {
+    var manufacturer = await FactoryPush.manufacturer();
+    switch (manufacturer) {
+      case Manufacturer.XIAOMI:
+        _manufacturer = "小米";
+        break;
+      case Manufacturer.HUAWEI:
+        _manufacturer = "华为";
+        break;
+      case Manufacturer.OPPO:
+        _manufacturer = "OPPO";
+        break;
+      case Manufacturer.VIVO:
+        _manufacturer = "VIVO";
+        break;
+      case Manufacturer.MEIZU:
+        _manufacturer = "魅族";
+        break;
+      case Manufacturer.OTHER:
+        _manufacturer = "其他";
+        break;
+    }
+    setState(() {});
   }
 
   ///判断当前是否打开通知

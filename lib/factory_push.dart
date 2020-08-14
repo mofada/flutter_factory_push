@@ -1,11 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:factory_push/bean/push_message_bean.dart';
 import 'package:factory_push/constant/argument_name.dart';
 import 'package:factory_push/constant/channel_name.dart';
+import 'package:factory_push/constant/message_type.dart';
 import 'package:factory_push/constant/method_name.dart';
 import 'package:flutter/services.dart';
+
+part "bean/push_message_bean.dart";
+part "constant/manufacturer.dart";
 
 ///当接收到消息的时候
 typedef OnMessageEvent = void Function(PushMessageBean messageBean);
@@ -27,13 +30,31 @@ class FactoryPush {
   }
 
   /// 接收消息
-  static void onPushReceiver<T>(OnMessageEvent onMessageEvent,
-      {Function onError, void onDone(), bool cancelOnError}) {
+  static void onPushReceiver<T>(OnMessageEvent onEvent,
+      {OnMessageEvent onMessageReceiver,
+      OnMessageEvent onNotificationClicked,
+      Function onError,
+      void onDone(),
+      bool cancelOnError}) {
     _receiverEvent.receiveBroadcastStream().listen((event) {
       //解析实体
       var message = PushMessageBean.fromJson(json.decode(event));
-      //接收消息
-      onMessageEvent(message);
+
+      //推送事件
+      onEvent(message);
+
+      //如果是接收消息并且方法不为空
+      if (message.messageType == MessageType.messageReceiver &&
+          onMessageReceiver != null) {
+        //接收消息
+        onMessageReceiver(message);
+      }
+      //如果接收的是点击消息, 并且点击方法不空
+      if (message.messageType == MessageType.notificationClicked &&
+          onNotificationClicked != null) {
+        //接收消息
+        onNotificationClicked(message);
+      }
     }, onError: onError, onDone: onDone, cancelOnError: cancelOnError);
   }
 
@@ -44,14 +65,18 @@ class FactoryPush {
   ///
   /// @param {String} [xiaomiAppId] 在开发者网站上注册时生成的，MiPush推送服务颁发给app的唯一认证标识
   /// @param {String} [xiaomiAppKey] 在开发者网站上注册时生成的，与appID相对应，用于验证appID是否合法
-  static Future setup({String xiaomiAppId, String xiaomiAppKey}) async {
+  static Future setup(
+      {String xiaomiAppId, String xiaomiAppKey, String huaweiAppId}) async {
     Map<String, dynamic> arguments = <String, dynamic>{};
 
     ///小米参数
     arguments[ArgumentName.xiaomiAppId] = xiaomiAppId;
     arguments[ArgumentName.xiaomiAppKey] = xiaomiAppKey;
 
-    await _channel.invokeMethod(MethodName.setup, arguments);
+    ///华为
+    arguments[ArgumentName.huaweiAppId] = huaweiAppId;
+
+    return await _channel.invokeMethod(MethodName.setup, arguments);
   }
 
   ///
@@ -61,7 +86,7 @@ class FactoryPush {
   ///
   /// @param {bool} [debugMode] true: 开启调试模式, false: 关闭调试模式
   static Future setDebugMode(bool debugMode) async {
-    await _channel.invokeMethod(
+    return await _channel.invokeMethod(
         MethodName.setDebugMode, {ArgumentName.debugMode: debugMode});
   }
 
@@ -73,7 +98,7 @@ class FactoryPush {
   ///
   /// 小米: unregisterPush
   static Future stopPush() async {
-    await _channel.invokeMethod(MethodName.stopPush);
+    return await _channel.invokeMethod(MethodName.stopPush);
   }
 
   ///
@@ -85,7 +110,7 @@ class FactoryPush {
   ///
   /// @param {String} [alias] 别名
   static Future setAlias(String alias) async {
-    await _channel
+    return await _channel
         .invokeMethod(MethodName.setAlias, {ArgumentName.alias: alias});
   }
 
@@ -98,7 +123,7 @@ class FactoryPush {
   ///
   /// @param {String} [alias] 别名
   static Future deleteAlias(String alias) async {
-    await _channel
+    return await _channel
         .invokeMethod(MethodName.deleteAlias, {ArgumentName.alias: alias});
   }
 
@@ -106,15 +131,16 @@ class FactoryPush {
   /// 获取客户端所有设置的别名
   ///
   /// 小米: getAllAlias(final Context context)
-  static Future<List<dynamic>> getAllAlias() async {
-    var alias = await _channel.invokeMethod(MethodName.getAllAlias);
+  static Future<List<String>> getAllAlias() async {
+    final List<dynamic> alias =
+        await _channel.invokeMethod(MethodName.getAllAlias);
     return List<String>.from(alias);
   }
 
   ///
   ///清客户端所设置的别名
   static Future cleanAlias() async {
-    await _channel.invokeMethod(MethodName.cleanAlias);
+    return await _channel.invokeMethod(MethodName.cleanAlias);
   }
 
   ///
@@ -126,13 +152,15 @@ class FactoryPush {
   ///
   /// @param {String} [tag] 标签/主题
   static Future addTag(String tag) async {
-    await _channel.invokeMethod(MethodName.addTag, {ArgumentName.tag: tag});
+    return await _channel
+        .invokeMethod(MethodName.addTag, {ArgumentName.tag: tag});
   }
 
   ///
   /// 批量添加标签, 小米中标签叫做主题
   static Future addTags(List<String> tags) async {
-    await _channel.invokeMethod(MethodName.addTags, {ArgumentName.tags: tags});
+    return await _channel
+        .invokeMethod(MethodName.addTags, {ArgumentName.tags: tags});
   }
 
   ///
@@ -143,22 +171,24 @@ class FactoryPush {
   ///
   /// @param {String} [tag] 标签/主题
   static Future deleteTag(String tag) async {
-    await _channel.invokeMethod(MethodName.deleteTag, {ArgumentName.tag: tag});
+    return await _channel
+        .invokeMethod(MethodName.deleteTag, {ArgumentName.tag: tag});
   }
 
   ///
   /// 获取所有的标签, 小米中标签叫做主题
   ///
   /// 小米: getAllTopic(final Context context)
-  static Future<List<dynamic>> getAllTag() async {
-    var tags = await _channel.invokeMethod(MethodName.getAllTag);
+  static Future<List<String>> getAllTag() async {
+    final List<dynamic> tags =
+        await _channel.invokeMethod(MethodName.getAllTag);
     return List<String>.from(tags);
   }
 
   ///
   ///清除所有的标签, 小米中标签叫做主题
   static Future cleanTag() async {
-    await _channel.invokeMethod(MethodName.cleanTag);
+    return await _channel.invokeMethod(MethodName.cleanTag);
   }
 
   ///
@@ -169,7 +199,7 @@ class FactoryPush {
   ///
   /// @param {int} [notifyId] 通知id
   static Future clearNotification(int notifyId) async {
-    await _channel.invokeMethod(
+    return await _channel.invokeMethod(
         MethodName.clearNotification, {ArgumentName.notify_id: notifyId});
   }
 
@@ -178,7 +208,7 @@ class FactoryPush {
   ///
   /// 小米: clearNotification(Context context)
   static Future clearAllNotification() async {
-    await _channel.invokeMethod(MethodName.clearAllNotification);
+    return await _channel.invokeMethod(MethodName.clearAllNotification);
   }
 
   ///
@@ -187,7 +217,7 @@ class FactoryPush {
   ///
   /// 小米: pausePush(Context context, String category)
   static Future pausePush() async {
-    await _channel.invokeMethod(MethodName.pausePush);
+    return await _channel.invokeMethod(MethodName.pausePush);
   }
 
   ///
@@ -196,7 +226,7 @@ class FactoryPush {
   ///
   /// 小米: resumePush(Context context, String category)
   static Future resumePush() async {
-    await _channel.invokeMethod(MethodName.resumePush);
+    return await _channel.invokeMethod(MethodName.resumePush);
   }
 
   ///
@@ -204,7 +234,7 @@ class FactoryPush {
   ///
   /// 小米: enablePush(final Context context)
   static Future enablePush() async {
-    await _channel.invokeMethod(MethodName.enablePush);
+    return await _channel.invokeMethod(MethodName.enablePush);
   }
 
   ///
@@ -212,7 +242,7 @@ class FactoryPush {
   ///
   /// 小米: disablePush(final Context context)
   static Future disablePush() async {
-    await _channel.invokeMethod(MethodName.disablePush);
+    return await _channel.invokeMethod(MethodName.disablePush);
   }
 
   ///
@@ -220,7 +250,7 @@ class FactoryPush {
   ///
   /// 小米: getRegId(Context context)
   static Future<String> getRegistrationId() async {
-    var registrationId =
+    final String registrationId =
         await _channel.invokeMethod(MethodName.getRegistrationId);
     return registrationId;
   }
@@ -238,13 +268,13 @@ class FactoryPush {
   /// @param {int} [endMinter] 接收时段开始时间的小时
   static Future setPushTime(
       int startHour, int startMinter, int endHour, int endMinter) async {
-    await _channel.invokeMethod(MethodName.getRegistrationId);
+    return await _channel.invokeMethod(MethodName.getRegistrationId);
   }
 
   ///
   /// 判断是否开启通知栏
   static Future<bool> isNotificationEnabled() async {
-    var isNotificationEnable =
+    final bool isNotificationEnable =
         await _channel.invokeMethod(MethodName.isNotificationEnabled);
     return isNotificationEnable;
   }
@@ -252,6 +282,27 @@ class FactoryPush {
   ///
   /// 前往设置界面打开通知栏
   static Future openNotification() async {
-    await _channel.invokeMethod(MethodName.openNotification);
+    return await _channel.invokeMethod(MethodName.openNotification);
+  }
+
+  ///
+  /// 判断当前手机厂商
+  static Future<Manufacturer> manufacturer() async {
+    final String manufacturer =
+        await _channel.invokeMethod(MethodName.manufacturer);
+    switch (manufacturer) {
+      case "xiaomi":
+        return Manufacturer.XIAOMI;
+      case "huawei":
+        return Manufacturer.HUAWEI;
+      case "oppo":
+        return Manufacturer.OPPO;
+      case "vivo":
+        return Manufacturer.VIVO;
+      case "meizu":
+        return Manufacturer.MEIZU;
+      default:
+        return Manufacturer.OTHER;
+    }
   }
 }

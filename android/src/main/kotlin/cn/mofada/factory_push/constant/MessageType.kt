@@ -10,7 +10,7 @@ enum class MessageType {
     /**
      * 接收消息
      */
-    MessageArrived,
+    MessageReceiver,
 
     /**
      * 通知被点击
