@@ -38,7 +38,7 @@ object PushMethodImplement {
         //华为手机, 华为推送
         if (ManufacturerUtil.isHUAWEI() ||
                 call.hasArgument(ArgumentName.HUAWEI_APP_ID)) {
-            val appid = call.argument<String>(ArgumentName.XIAOMI_APP_KEY)
+            val appid = call.argument<String>(ArgumentName.HUAWEI_APP_ID)
             HuaWeiPushImplement.setup(context, appid!!)
         }
         result.success(null)

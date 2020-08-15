@@ -1,15 +1,8 @@
 package cn.mofada.factory_push.implement
 
 import android.content.Context
-import cn.mofada.factory_push.constant.ArgumentName
-import cn.mofada.factory_push.util.ManufacturerUtil
-import com.huawei.agconnect.config.AGConnectServicesConfig
 import com.huawei.hms.aaid.HmsInstanceId
-import com.huawei.hms.common.internal.HmsClient
 import com.huawei.hms.push.HmsMessaging
-import com.xiaomi.mipush.sdk.MiPushClient
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
 import kotlin.concurrent.thread
 
 /**
@@ -27,7 +20,11 @@ object HuaWeiPushImplement {
      */
     fun setup(context: Context, appId: String) {
         thread {
-            HmsInstanceId.getInstance(context).getToken(appId, "HCM")
+            try {
+                HmsInstanceId.getInstance(context).getToken(appId, "HCM")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
