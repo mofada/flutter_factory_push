@@ -8,4 +8,7 @@ class MessageType {
 
   ///通知栏被点击的时候
   static const String notificationClicked = "NotificationClicked";
+
+  ///华为的token
+  static const String token = "Token";
 }

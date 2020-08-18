@@ -15,5 +15,10 @@ enum class MessageType {
     /**
      * 通知被点击
      */
-    NotificationClicked
+    NotificationClicked,
+
+    /**
+     * 华为Token
+     */
+    Token,
 }

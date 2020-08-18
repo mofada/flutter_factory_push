@@ -8,10 +8,14 @@ import 'package:factory_push/constant/method_name.dart';
 import 'package:flutter/services.dart';
 
 part "bean/push_message_bean.dart";
+
 part "constant/manufacturer.dart";
 
 ///当接收到消息的时候
 typedef OnMessageEvent = void Function(PushMessageBean messageBean);
+
+///华为token事件
+typedef OnTokenEvent = void Function(String token);
 
 class FactoryPush {
   /// 方法通道
@@ -30,28 +34,36 @@ class FactoryPush {
   }
 
   /// 接收消息
-  static void onPushReceiver<T>(OnMessageEvent onEvent,
-      {OnMessageEvent onMessageReceiver,
+  static void onPushReceiver<T>(
+      {void onEvent(T event),
+      OnMessageEvent onMessageReceiver,
       OnMessageEvent onNotificationClicked,
+      OnTokenEvent onTokenReceiver,
       Function onError,
       void onDone(),
       bool cancelOnError}) {
     _receiverEvent.receiveBroadcastStream().listen((event) {
-      //解析实体
-      var message = PushMessageBean.fromJson(json.decode(event));
-
       //推送事件
-      onEvent(message);
+      if (onEvent != null) onEvent(event);
 
+      //消息类型
+      final type = event["type"];
+      //数据
+      final data = event["data"];
+
+      if (type == MessageType.token && onTokenReceiver != null) {
+        onTokenReceiver(data);
+      }
       //如果是接收消息并且方法不为空
-      if (message.messageType == MessageType.messageReceiver &&
-          onMessageReceiver != null) {
+      if (type == MessageType.messageReceiver && onMessageReceiver != null) {
+        final message = PushMessageBean.fromJson(json.decode(data));
         //接收消息
         onMessageReceiver(message);
       }
       //如果接收的是点击消息, 并且点击方法不空
-      if (message.messageType == MessageType.notificationClicked &&
+      if (type == MessageType.notificationClicked &&
           onNotificationClicked != null) {
+        final message = PushMessageBean.fromJson(json.decode(data));
         //接收消息
         onNotificationClicked(message);
       }

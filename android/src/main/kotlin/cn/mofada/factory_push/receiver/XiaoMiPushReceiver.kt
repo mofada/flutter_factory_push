@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import cn.mofada.factory_push.bean.PushMessageBean
 import cn.mofada.factory_push.constant.MessageType
+import cn.mofada.factory_push.util.ActivityUtil
 import com.xiaomi.mipush.sdk.MiPushMessage
 import com.xiaomi.mipush.sdk.PushMessageReceiver
 
@@ -18,18 +19,9 @@ class XiaoMiPushReceiver : PushMessageReceiver() {
      * 接收服务器推送的通知消息，用户点击后触发，消息封装在 MiPushMessage类中。详细说明请参照3.4.22。
      */
     override fun onNotificationMessageClicked(context: Context, miPushMessage: MiPushMessage) {
-        MessageReceiver.sendIntent(context, messageToPushMessageBean(MessageType.NotificationClicked, miPushMessage))
+        MessageReceiver.sendMessageIntent(context,MessageType.NotificationClicked, messageToPushMessageBean( miPushMessage))
 
-        //启动主程序
-        val intent = context
-                .packageManager
-                .getLaunchIntentForPackage(context.packageName)
-                ?.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//        val build = FlutterActivity
-//                .withNewEngine()
-//                .initialRoute("/message")
-//                .build(context)
-        context.startActivity(intent)
+        ActivityUtil.startMainActivity(context)
     }
 
     /**
@@ -38,16 +30,16 @@ class XiaoMiPushReceiver : PushMessageReceiver() {
      * 或者自启动白名单中，才可以通过此方法接受到该消息。详细说明请参照3.4.23。
      */
     override fun onNotificationMessageArrived(context: Context, miPushMessage: MiPushMessage) {
-        MessageReceiver.sendIntent(context, messageToPushMessageBean(MessageType.MessageReceiver, miPushMessage))
+        MessageReceiver.sendMessageIntent(context, MessageType.MessageReceiver,messageToPushMessageBean( miPushMessage))
     }
 
     /**
      * 将小米推送消息转成自己的推送实体类
      */
-    private fun messageToPushMessageBean(method: MessageType, miPushMessage: MiPushMessage): PushMessageBean {
+    private fun messageToPushMessageBean( miPushMessage: MiPushMessage): PushMessageBean {
         return PushMessageBean(
                 messageId = miPushMessage.messageId,
-                messageType = method,
+                messageType = miPushMessage.messageType.toString(),
                 notifyId = miPushMessage.notifyId,
                 title = miPushMessage.title,
                 message = miPushMessage.description,

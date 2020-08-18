@@ -19,6 +19,10 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
+    FactoryPush.onPushReceiver(onEvent: (message) {
+      print(message);
+    });
+
     ///初始化推送设置
     FactoryPush.setup(
         xiaomiAppId: "2882303761518576392",

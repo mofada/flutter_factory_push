@@ -259,6 +259,7 @@ object PushMethodImplement {
     fun getRegistrationId(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
             ManufacturerUtil.isXIAOMI() -> result.success(XiaoMiPushImplement.getRegistrationId(context))
+            ManufacturerUtil.isHUAWEI() -> HuaWeiPushImplement.getRegistrationId(context,result)
         }
     }
 

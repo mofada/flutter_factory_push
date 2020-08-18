@@ -31,10 +31,13 @@ class _HomePageState extends State<HomePage> {
     initManufacturer();
 
     ///当接收到消息的时候
-    FactoryPush.onPushReceiver((message) {
-      _messages.add(message);
-      setState(() {});
-    });
+    FactoryPush.onPushReceiver(
+        onMessageReceiver: _onEvent, onNotificationClicked: _onEvent);
+  }
+
+  void _onEvent(PushMessageBean messageBean) {
+    _messages.add(messageBean);
+    setState(() {});
   }
 
   @override

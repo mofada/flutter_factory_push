@@ -1,54 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cn.mofada.factory_push">
-    <!--外部写入权限-->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!--网络权限-->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!--允许访问网络状态-->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!--允许访问WiFi状态-->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!--读取手机状态-->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <!--手机震动权限-->
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <!--获取应用层级-->
-    <uses-permission android:name="android.permission.GET_TASKS" />
-
-    <!--****************************************************************************************************-->
-    <!--***************************************小米推送*********************************************-->
-    <!--****************************************************************************************************-->
-    <!--小米推送权限-->
+    <!-- 外部写入权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 网络权限 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 允许访问网络状态 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 允许访问WiFi状态 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 读取手机状态 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 手机震动权限 -->
+    <uses-permission android:name="android.permission.VIBRATE" /> <!-- 获取应用层级 -->
+    <uses-permission android:name="android.permission.GET_TASKS" /> <!-- **************************************************************************************************** -->
+    <!-- ********************************************小米推送************************************************* -->
+    <!-- **************************************************************************************************** -->
+    <!-- 小米推送权限 -->
     <permission
         android:name="${applicationId}.permission.MIPUSH_RECEIVE"
-        android:protectionLevel="signature" />
-
-    <!--小米推送权限-->
+        android:protectionLevel="signature" /> <!-- 小米推送权限 -->
     <uses-permission android:name="${applicationId}.permission.MIPUSH_RECEIVE" />
 
     <application>
-        <!--****************************************************************************************************-->
-        <!--***************************************小米推送*********************************************-->
-        <!--****************************************************************************************************-->
+        <!-- **************************************************************************************************** -->
+        <!-- ********************************************小米推送************************************************* -->
+        <!-- **************************************************************************************************** -->
         <service
             android:name="com.xiaomi.push.service.XMPushService"
             android:enabled="true"
-            android:process=":pushservice" />
-
-        <!--注：此service必须在3.0.1版本以后（包括3.0.1版本）加入-->
+            android:process=":pushservice" /> <!-- 注：此service必须在3.0.1版本以后（包括3.0.1版本）加入 -->
         <service
             android:name="com.xiaomi.push.service.XMJobService"
             android:enabled="true"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:process=":pushservice" />
-
         <service
             android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
             android:enabled="true"
-            android:exported="true" />
-
-        <!--注：此service必须在2.2.5版本以后（包括2.2.5版本）加入-->
+            android:exported="true" /> <!-- 注：此service必须在2.2.5版本以后（包括2.2.5版本）加入 -->
         <service
             android:name="com.xiaomi.mipush.sdk.MessageHandleService"
             android:enabled="true" />
@@ -58,10 +44,10 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name="com.xiaomi.push.service.receivers.PingReceiver"
             android:exported="false"
@@ -69,13 +55,12 @@
             <intent-filter>
                 <action android:name="com.xiaomi.push.PING_TIMER" />
             </intent-filter>
-        </receiver>
-
-        <!--自定义小米推送接收器-->
+        </receiver> <!-- 自定义小米推送接收器 -->
         <receiver
             android:name=".receiver.XiaoMiPushReceiver"
             android:exported="true">
-            <!--这里com.xiaomi.mipushdemo.DemoMessageRreceiver改成app中定义的完整类名-->
+
+            <!-- 这里com.xiaomi.mipushdemo.DemoMessageRreceiver改成app中定义的完整类名 -->
             <intent-filter>
                 <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
             </intent-filter>
@@ -85,6 +70,40 @@
             <intent-filter>
                 <action android:name="com.xiaomi.mipush.ERROR" />
             </intent-filter>
-        </receiver>
+        </receiver> <!-- 华为推送设置 -->
+        <!-- **************************************************************************************************** -->
+        <!-- *********************************************华为推送************************************************ -->
+        <!-- **************************************************************************************************** -->
+        <service
+            android:name=".receiver.HuaWeiPushReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.huawei.push.action.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="push_kit_auto_init_enabled"
+            android:value="false" />
+
+        <activity
+            android:name=".activity.HuaWeiMessageActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/HuaWeiMessage">
+            <intent-filter>
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="${applicationId}"
+                    android:path="/message"
+                    android:scheme="factory_push" />
+            </intent-filter>
+        </activity>
+
     </application>
+
 </manifest>

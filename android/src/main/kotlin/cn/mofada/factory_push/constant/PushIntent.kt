@@ -16,4 +16,14 @@ object PushIntent {
      * 接收的结果
      */
     const val EXTRA_MESSAGE = "push_message"
+
+    /**
+     * token消息
+     */
+    const val EXTRA_TOKEN = "push_token"
+
+    /**
+     * 类型
+     */
+    const val EXTRA_TYPE = "push_type"
 }

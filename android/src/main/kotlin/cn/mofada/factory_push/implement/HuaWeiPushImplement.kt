@@ -3,6 +3,7 @@ package cn.mofada.factory_push.implement
 import android.content.Context
 import com.huawei.hms.aaid.HmsInstanceId
 import com.huawei.hms.push.HmsMessaging
+import io.flutter.plugin.common.MethodChannel
 import kotlin.concurrent.thread
 
 /**
@@ -21,9 +22,9 @@ object HuaWeiPushImplement {
     fun setup(context: Context, appId: String) {
         thread {
             try {
-                HmsInstanceId.getInstance(context).getToken(appId, "HCM")
+                HmsInstanceId.getInstance(context).getToken(null, null)
             } catch (e: Exception) {
-                e.printStackTrace()
+//                e.printStackTrace()
             }
         }
     }
@@ -34,5 +35,19 @@ object HuaWeiPushImplement {
      */
     fun addTag(context: Context, tag: String) {
         HmsMessaging.getInstance(context).subscribe(tag)
+    }
+
+    /**
+     * 获取客户端的RegId
+     */
+    fun getRegistrationId(context: Context, result: MethodChannel.Result) {
+        thread {
+            try {
+                result.success(HmsInstanceId.getInstance(context).getToken(null, null))
+            } catch (e: Exception) {
+//                e.printStackTrace()
+//                result.success(null)
+            }
+        }
     }
 }

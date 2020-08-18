@@ -1,8 +1,6 @@
 package cn.mofada.factory_push.bean
 
-import cn.mofada.factory_push.constant.MessageType
 import org.json.JSONObject
-import java.io.Serializable
 
 /**
  * @name: fada
@@ -10,23 +8,22 @@ import java.io.Serializable
  * @date: 2020/8/11 14:53
  * @description: 描述类
  */
-
 data class PushMessageBean(
         //消息id
         var messageId: String?,
         //消息类型
-        val messageType: MessageType,
+        val messageType: String?,
         //messageId, 用来取消通知
-        var notifyId: Int = -1,
+        var notifyId: Int?,
         //消息标题
-        val title: String,
+        val title: String?,
         //消息内容
-        val message: String,
+        val message: String?,
         //消息描述
         //分类
         val category: String?,
         //额外字段
-        val extra: Map<String, String>
+        val extra: Map<String, String>?
 ) {
     fun toJson(): String {
         val jsonObject = JSONObject()
@@ -40,7 +37,9 @@ data class PushMessageBean(
         return jsonObject.toString()
     }
 
-    private fun mapToJson(extra: Map<String, String>): JSONObject {
+    private fun mapToJson(extra: Map<String, String>?): JSONObject {
+        if (extra == null) return JSONObject()
+
         val jsonObject = JSONObject()
         for (key in extra.keys) {
             jsonObject.put(key, extra[key])

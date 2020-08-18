@@ -20,7 +20,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar
  * @date 2020/8/10
  * @description 推送插件
  */
-public class FactoryPushPlugin : FlutterPlugin, MethodCallHandler {
+class FactoryPushPlugin : FlutterPlugin, MethodCallHandler {
     private lateinit var channel: MethodChannel
 
     private lateinit var context: Context
