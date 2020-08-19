@@ -4,7 +4,7 @@ package cn.mofada.factory_push.constant
  * @name: fada
  * @email: fada@mofada.cn
  * @date: 2020/8/11 15:56
- * @description: 描述类
+ * @description: 消息类型枚举
  */
 enum class MessageType {
     /**

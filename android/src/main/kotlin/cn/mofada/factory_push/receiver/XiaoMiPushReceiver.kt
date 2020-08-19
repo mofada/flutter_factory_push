@@ -12,7 +12,7 @@ import com.xiaomi.mipush.sdk.PushMessageReceiver
  * @author fada
  * @email fada@mofada.cn
  * @date 2020/8/11 11:01
- * @description 描述类
+ * @description 小米推送服务接收类
  */
 class XiaoMiPushReceiver : PushMessageReceiver() {
     /**

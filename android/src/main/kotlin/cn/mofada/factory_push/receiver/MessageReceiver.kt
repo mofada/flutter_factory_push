@@ -30,8 +30,8 @@ class MessageReceiver(private val events: EventChannel.EventSink?) : BroadcastRe
         result["type"] = messageType
 
         when (MessageType.valueOf(messageType)) {
-            MessageType.MessageReceiver -> result["message"] = message ?: ""
-            MessageType.NotificationClicked -> result["message"] = message ?: ""
+            MessageType.MessageReceiver -> result["data"] = message ?: ""
+            MessageType.NotificationClicked -> result["data"] = message ?: ""
             MessageType.Token -> result["data"] = token ?: ""
         }
 

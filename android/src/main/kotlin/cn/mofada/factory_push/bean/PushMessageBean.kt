@@ -6,7 +6,7 @@ import org.json.JSONObject
  * @name: fada
  * @email: fada@mofada.cn
  * @date: 2020/8/11 14:53
- * @description: 描述类
+ * @description: 推送消息实体类
  */
 data class PushMessageBean(
         //消息id

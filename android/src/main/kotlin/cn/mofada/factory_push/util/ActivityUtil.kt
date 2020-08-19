@@ -7,11 +7,11 @@ import android.content.Intent
  * @name: fada
  * @email: fada@mofada.cn
  * @date: 2020/8/18 15:02
- * @description: 描述类
+ * @description: Activity工具
  */
 object ActivityUtil {
     /**
-     * 启动朱程序
+     * 启动主程序
      */
     fun startMainActivity(context: Context) {
         //启动主程序

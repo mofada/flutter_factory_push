@@ -5,6 +5,7 @@ import android.os.Bundle
 import cn.mofada.factory_push.bean.PushMessageBean
 import cn.mofada.factory_push.constant.MessageType
 import cn.mofada.factory_push.receiver.MessageReceiver
+import cn.mofada.factory_push.util.ActivityUtil
 
 
 /**
@@ -19,6 +20,9 @@ class HuaWeiMessageActivity : Activity() {
         super.onCreate(savedInstanceState)
 
         MessageReceiver.sendMessageIntent(this, MessageType.NotificationClicked, extraToMessage(intent.extras))
+
+        //启动主程序
+        ActivityUtil.startMainActivity(this)
 
         //关闭界面
         finish()

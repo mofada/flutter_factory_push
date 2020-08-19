@@ -43,8 +43,8 @@
             android:value="2" />
 
         <!--设置华为app ID-->
-        <meta-data
-            android:name="com.huawei.hms.client.appid"
-            android:value="102736937" />
+<!--        <meta-data-->
+<!--            android:name="com.huawei.hms.client.appid"-->
+<!--            android:value="102736937" />-->
     </application>
 </manifest>

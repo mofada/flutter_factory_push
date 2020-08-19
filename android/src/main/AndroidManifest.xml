@@ -8,19 +8,20 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 读取手机状态 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 手机震动权限 -->
     <uses-permission android:name="android.permission.VIBRATE" /> <!-- 获取应用层级 -->
-    <uses-permission android:name="android.permission.GET_TASKS" /> <!-- **************************************************************************************************** -->
-    <!-- ********************************************小米推送************************************************* -->
-    <!-- **************************************************************************************************** -->
+    <uses-permission android:name="android.permission.GET_TASKS" />
+
     <!-- 小米推送权限 -->
     <permission
         android:name="${applicationId}.permission.MIPUSH_RECEIVE"
         android:protectionLevel="signature" /> <!-- 小米推送权限 -->
     <uses-permission android:name="${applicationId}.permission.MIPUSH_RECEIVE" />
 
+    <!--oppo推送权限-->
+    <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE" />
+    <uses-permission android:name="com.heytap.mcs.permission.RECIEVE_MCS_MESSAGE" />
+
     <application>
-        <!-- **************************************************************************************************** -->
-        <!-- ********************************************小米推送************************************************* -->
-        <!-- **************************************************************************************************** -->
+        <!--小米推送配置-->
         <service
             android:name="com.xiaomi.push.service.XMPushService"
             android:enabled="true"
@@ -55,7 +56,8 @@
             <intent-filter>
                 <action android:name="com.xiaomi.push.PING_TIMER" />
             </intent-filter>
-        </receiver> <!-- 自定义小米推送接收器 -->
+        </receiver>
+        <!-- 自定义小米推送接收器 -->
         <receiver
             android:name=".receiver.XiaoMiPushReceiver"
             android:exported="true">
@@ -70,10 +72,9 @@
             <intent-filter>
                 <action android:name="com.xiaomi.mipush.ERROR" />
             </intent-filter>
-        </receiver> <!-- 华为推送设置 -->
-        <!-- **************************************************************************************************** -->
-        <!-- *********************************************华为推送************************************************ -->
-        <!-- **************************************************************************************************** -->
+        </receiver>
+
+        <!-- 华为推送设置 -->
         <service
             android:name=".receiver.HuaWeiPushReceiver"
             android:exported="true">
@@ -104,6 +105,27 @@
             </intent-filter>
         </activity>
 
+        <!--oppo推送设置-->
+        <service
+            android:name="com.heytap.msp.push.service.CompatibleDataMessageCallbackService"
+
+            android:permission="com.coloros.mcs.permission.SEND_MCS_MESSAGE">
+            <intent-filter>
+                <action android:name="com.coloros.mcs.action.RECEIVE_MCS_MESSAGE" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name="com.heytap.msp.push.service.DataMessageCallbackService"
+
+            android:permission="com.heytap.mcs.permission.SEND_PUSH_MESSAGE">
+
+            <intent-filter>
+                <action android:name="com.heytap.mcs.action.RECEIVE_MCS_MESSAGE" />
+
+                <action android:name="com.heytap.msp.push.RECEIVE_MCS_MESSAGE" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

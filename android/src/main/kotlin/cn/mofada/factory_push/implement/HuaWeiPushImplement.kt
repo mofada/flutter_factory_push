@@ -22,11 +22,18 @@ object HuaWeiPushImplement {
     fun setup(context: Context, appId: String) {
         thread {
             try {
-                HmsInstanceId.getInstance(context).getToken(null, null)
+                HmsInstanceId.getInstance(context).getToken(appId, "HCM")
             } catch (e: Exception) {
 //                e.printStackTrace()
             }
         }
+    }
+
+    /**
+     * 停止推送, 删除token
+     */
+    fun stopPush(context: Context) {
+        HmsInstanceId.getInstance(context).deleteToken(null, null)
     }
 
     /**
@@ -38,12 +45,41 @@ object HuaWeiPushImplement {
     }
 
     /**
+     * 批量添加多个标签
+     */
+    fun addTags(context: Context, tags: List<String>) {
+        tags.forEach { addTag(context, it) }
+    }
+
+    /**
+     * 删除标签
+     */
+    fun deleteTag(context: Context, tag: String) {
+        HmsMessaging.getInstance(context).unsubscribe(tag)
+    }
+
+    /**
+     * 关闭推送栏消息
+     */
+    fun pausePush(context: Context) {
+        HmsMessaging.getInstance(context).turnOnPush()
+    }
+
+    /**
+     * 关闭推送栏消息
+     */
+    fun resumePush(context: Context) {
+        HmsMessaging.getInstance(context).turnOffPush()
+    }
+
+    /**
      * 获取客户端的RegId
      */
     fun getRegistrationId(context: Context, result: MethodChannel.Result) {
         thread {
             try {
-                result.success(HmsInstanceId.getInstance(context).getToken(null, null))
+                val token = HmsInstanceId.getInstance(context).getToken(null, null)
+                result.success(token)
             } catch (e: Exception) {
 //                e.printStackTrace()
 //                result.success(null)

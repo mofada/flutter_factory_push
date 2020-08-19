@@ -141,7 +141,10 @@ object XiaoMiPushImplement {
     /**
      * 获取客户端的RegId
      */
-    fun getRegistrationId(context: Context): String = MiPushClient.getRegId(context)
+    fun getRegistrationId(context: Context, result: MethodChannel.Result) {
+        val regId = MiPushClient.getRegId(context)
+        result.success(regId)
+    }
 
     /**
      * 暂停接收MiPush服务推送的消息，app在恢复MiPush推送服务之前，不接收任何推送消息

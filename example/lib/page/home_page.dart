@@ -1,4 +1,5 @@
 import 'package:factory_push/factory_push.dart';
+import 'package:factory_push_example/page/detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -32,7 +33,9 @@ class _HomePageState extends State<HomePage> {
 
     ///当接收到消息的时候
     FactoryPush.onPushReceiver(
-        onMessageReceiver: _onEvent, onNotificationClicked: _onEvent);
+        onEvent: (message) => print(message),
+        onMessageReceiver: _onEvent,
+        onNotificationClicked: _onEvent);
   }
 
   void _onEvent(PushMessageBean messageBean) {
@@ -68,7 +71,15 @@ class _HomePageState extends State<HomePage> {
             )
           : ListView.separated(
               itemBuilder: (BuildContext context, int index) => ListTile(
-                    title: Text(_messages[index].title),
+                    title: Text(_messages[index].title ?? "收到一条消息"),
+                    trailing: Icon(Icons.chevron_right),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => DetailPage(
+                          messageBean: _messages[index],
+                        ),
+                      ),
+                    ),
                   ),
               separatorBuilder: (BuildContext context, int index) => Divider(),
               itemCount: _messages.length),
