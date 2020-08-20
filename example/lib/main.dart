@@ -21,10 +21,13 @@ class _MyAppState extends State<MyApp> {
 
     ///初始化推送设置
     FactoryPush.setup(
-        xiaomiAppId: "2882303761518576392",
-        xiaomiAppKey: "5241857660392",
-        huaweiAppId: "102736937");
-    FactoryPush.setDebugMode(true);
+      xiaomiAppId: "2882303761518576392",
+      xiaomiAppKey: "5241857660392",
+      huaweiAppId: "102736937",
+      oppoAppKey: "8053e8d8bc7142e1aa7dbee0cb708b6f",
+      oppoAppSecret: "7c92f5fc05ac4c57b01a50f43b81c6a8",
+      debugMode: true,
+    );
   }
 
   @override

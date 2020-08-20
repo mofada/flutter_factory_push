@@ -59,7 +59,6 @@ class FactoryPushPlugin : FlutterPlugin, MethodCallHandler {
         when (MethodName.valueOf(call.method)) {
             MethodName.GetPlatformVersion -> result.success("Android ${Build.VERSION.RELEASE}")
             MethodName.Setup -> PushMethodImplement.setup(context, call, result)
-            MethodName.SetDebugMode -> PushMethodImplement.setDebugMode(context, call, result)
             MethodName.StopPush -> PushMethodImplement.stopPush(context, call, result)
             MethodName.SetAlias -> PushMethodImplement.setAlias(context, call, result)
             MethodName.DeleteAlias -> PushMethodImplement.deleteAlias(context, call, result)

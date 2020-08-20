@@ -13,24 +13,24 @@ import com.heytap.msp.push.callback.ICallBackResultService
 class OppoPushReceiver : ICallBackResultService {
     private val TAG = "OppoPushReceiver"
 
-    override fun onGetPushStatus(p0: Int, p1: Int) {
-        Log.d(TAG, "onGetPushStatus() called with: p0 = $p0, p1 = $p1")
+    override fun onGetPushStatus(code: Int, status: Int) {
+        Log.d(TAG, "onGetPushStatus() called with: p0 = $code, p1 = $status")
     }
 
-    override fun onSetPushTime(p0: Int, p1: String?) {
-        Log.d(TAG, "onSetPushTime() called with: p0 = $p0, p1 = $p1")
+    override fun onSetPushTime(code: Int, p1: String?) {
+        Log.d(TAG, "onSetPushTime() called with: p0 = $code, p1 = $p1")
     }
 
-    override fun onGetNotificationStatus(p0: Int, p1: Int) {
-        Log.d(TAG, "onGetNotificationStatus() called with: p0 = $p0, p1 = $p1")
+    override fun onGetNotificationStatus(code: Int, status: Int) {
+        Log.d(TAG, "onGetNotificationStatus() called with: p0 = $code, p1 = $status")
     }
 
-    override fun onUnRegister(p0: Int) {
-        Log.d(TAG, "onUnRegister() called with: p0 = $p0")
+    override fun onUnRegister(code: Int) {
+        Log.d(TAG, "onUnRegister() called with: p0 = $code")
     }
 
-    override fun onRegister(p0: Int, p1: String?) {
-        Log.d(TAG, "onRegister() called with: p0 = $p0, p1 = $p1")
+    override fun onRegister(code: Int, registerId: String?) {
+        Log.d(TAG, "onRegister() called with: p0 = $code, p1 = $registerId")
     }
 
 }

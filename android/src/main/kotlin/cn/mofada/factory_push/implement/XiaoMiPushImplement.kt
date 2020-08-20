@@ -21,16 +21,11 @@ object XiaoMiPushImplement {
      * @param appId 在开发者网站上注册时生成的，MiPush推送服务颁发给app的唯一认证标识
      * @param appKey 在开发者网站上注册时生成的，与appID相对应，用于验证appID是否合法
      */
-    fun setup(context: Context, appId: String, appKey: String) {
+    fun setup(context: Context, appId: String, appKey: String, debugMode: Boolean) {
         MiPushClient.registerPush(context.applicationContext, appId, appKey)
-    }
 
-    /**
-     * 设置调试模式
-     */
-    fun setDebugMode(context: Context, debug: Boolean) {
         //打开Log
-        if (debug)
+        if (debugMode)
             Logger.setLogger(context, object : LoggerInterface {
                 override fun setTag(tag: String) {
                     // ignore

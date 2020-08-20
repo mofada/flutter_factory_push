@@ -20,11 +20,6 @@ enum class MethodName {
     Setup,
 
     /**
-     * 设置调试模式
-     */
-    SetDebugMode,
-
-    /**
      * 停止推送
      */
     StopPush,

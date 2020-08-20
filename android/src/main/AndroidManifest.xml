@@ -16,10 +16,6 @@
         android:protectionLevel="signature" /> <!-- 小米推送权限 -->
     <uses-permission android:name="${applicationId}.permission.MIPUSH_RECEIVE" />
 
-    <!--oppo推送权限-->
-    <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE" />
-    <uses-permission android:name="com.heytap.mcs.permission.RECIEVE_MCS_MESSAGE" />
-
     <application>
         <!--小米推送配置-->
         <service
@@ -88,10 +84,11 @@
             android:value="false" />
 
         <activity
-            android:name=".activity.HuaWeiMessageActivity"
+            android:name=".activity.MessageActivity"
             android:launchMode="singleTop"
             android:theme="@style/HuaWeiMessage">
             <intent-filter>
+                <action android:name="com.suning.mobile.psc.yunxin.oppo.push" />
 
                 <action android:name="android.intent.action.VIEW" />
 
@@ -104,28 +101,6 @@
                     android:scheme="factory_push" />
             </intent-filter>
         </activity>
-
-        <!--oppo推送设置-->
-        <service
-            android:name="com.heytap.msp.push.service.CompatibleDataMessageCallbackService"
-
-            android:permission="com.coloros.mcs.permission.SEND_MCS_MESSAGE">
-            <intent-filter>
-                <action android:name="com.coloros.mcs.action.RECEIVE_MCS_MESSAGE" />
-            </intent-filter>
-        </service>
-
-        <service
-            android:name="com.heytap.msp.push.service.DataMessageCallbackService"
-
-            android:permission="com.heytap.mcs.permission.SEND_PUSH_MESSAGE">
-
-            <intent-filter>
-                <action android:name="com.heytap.mcs.action.RECEIVE_MCS_MESSAGE" />
-
-                <action android:name="com.heytap.msp.push.RECEIVE_MCS_MESSAGE" />
-            </intent-filter>
-        </service>
     </application>
 
 </manifest>

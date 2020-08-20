@@ -26,6 +26,9 @@ object PushMethodImplement {
      * 华为: 获取token, 自动初始化
      */
     fun setup(context: Context, call: MethodCall, result: MethodChannel.Result) {
+        //是否是调试模式
+        val debugMode = call.argument<Boolean>(ArgumentName.DEBUG_MODE) ?: false
+
         //如果是小米手机, 并且有小米的id和key
         if (ManufacturerUtil.isXIAOMI() &&
                 call.hasArgument(ArgumentName.XIAOMI_APP_ID) &&
@@ -34,7 +37,7 @@ object PushMethodImplement {
             val appId = call.argument<String>(ArgumentName.XIAOMI_APP_ID)
             //应用key
             val appKey = call.argument<String>(ArgumentName.XIAOMI_APP_KEY)
-            XiaoMiPushImplement.setup(context, appId!!, appKey!!)
+            XiaoMiPushImplement.setup(context, appId!!, appKey!!, debugMode)
         }
         //华为手机, 华为推送
         if (ManufacturerUtil.isHUAWEI() &&
@@ -48,25 +51,10 @@ object PushMethodImplement {
                 call.hasArgument(ArgumentName.OPPO_APP_SECRET)) {
             val appKey = call.argument<String>(ArgumentName.OPPO_APP_KEY)
             val appSecret = call.argument<String>(ArgumentName.OPPO_APP_SECRET)
-            OppoPushImplement.setup(context, appKey!!, appSecret!!)
+            OppoPushImplement.setup(context, appKey!!, appSecret!!, debugMode)
         }
         result.success(null)
     }
-
-    /**
-     * 设置调试模式
-     * 小米: 打开调试日志
-     * 华为: 不支持调试, 没有找到
-     */
-    fun setDebugMode(context: Context, call: MethodCall, result: MethodChannel.Result) {
-        val debugMode = call.argument<Boolean>(ArgumentName.DEBUG_MODE) ?: false
-        //小米推送
-        when {
-            ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.setDebugMode(context, debugMode)
-        }
-        result.success(null)
-    }
-
 
     /**
      * 停止推送

@@ -77,8 +77,18 @@ class FactoryPush {
   ///
   /// @param {String} [xiaomiAppId] 在开发者网站上注册时生成的，MiPush推送服务颁发给app的唯一认证标识
   /// @param {String} [xiaomiAppKey] 在开发者网站上注册时生成的，与appID相对应，用于验证appID是否合法
-  static Future setup(
-      {String xiaomiAppId, String xiaomiAppKey, String huaweiAppId}) async {
+  /// @param {String} [huaweiAppId] 华为的 appId
+  /// @param {String} [oppoAppKey] oppo 的 oppoAppKey
+  /// @param {String} [oppoAppSecret] oppo 的 oppoAppSecret
+  /// @param {bool} [debugMode] true: 开启调试模式, false: 关闭调试模式
+  static Future setup({
+    String xiaomiAppId,
+    String xiaomiAppKey,
+    String huaweiAppId,
+    String oppoAppKey,
+    String oppoAppSecret,
+    bool debugMode = false,
+  }) async {
     Map<String, dynamic> arguments = <String, dynamic>{};
 
     ///小米参数
@@ -88,18 +98,14 @@ class FactoryPush {
     ///华为
     arguments[ArgumentName.huaweiAppId] = huaweiAppId;
 
-    return await _channel.invokeMethod(MethodName.setup, arguments);
-  }
+    ///Oppo
+    arguments[ArgumentName.oppoAppKey] = oppoAppKey;
+    arguments[ArgumentName.oppoAppSecret] = oppoAppSecret;
 
-  ///
-  /// 设置调试模式。
-  /// 注：该接口需在 setup 接口之前调用，避免出现部分日志没打印的情况
-  ///
-  ///
-  /// @param {bool} [debugMode] true: 开启调试模式, false: 关闭调试模式
-  static Future setDebugMode(bool debugMode) async {
-    return await _channel.invokeMethod(
-        MethodName.setDebugMode, {ArgumentName.debugMode: debugMode});
+    ///是否调试
+    arguments[ArgumentName.debugMode] = debugMode;
+
+    return await _channel.invokeMethod(MethodName.setup, arguments);
   }
 
   ///

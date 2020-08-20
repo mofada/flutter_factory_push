@@ -17,8 +17,11 @@ object OppoPushImplement {
      * @param appKey 在开发者网站上注册时生成的，与appID相对应，用于验证appID是否合法
      * @param appSecret 与AppSecret相对应
      */
-    fun setup(context: Context, appKey: String, appSecret: String) {
-        HeytapPushManager.register(context,appKey,appSecret,OppoPushReceiver())
+    fun setup(context: Context, appKey: String, appSecret: String, debugMode: Boolean) {
+        //初始化
+        HeytapPushManager.init(context, debugMode)
+        //注册推送服务
+        HeytapPushManager.register(context, appKey, appSecret, OppoPushReceiver())
     }
 
     /**

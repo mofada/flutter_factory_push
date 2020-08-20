@@ -13,6 +13,12 @@ class ArgumentName {
   ///华为推送app id
   static const String huaweiAppId = "huawei_app_id";
 
+  ///oppo app key
+  static const String oppoAppKey = "oppo_app_key";
+
+  ///oppo app secret
+  static const String oppoAppSecret = "oppo_app_secret";
+
   ///别名
   static const String alias = "alias";
 
