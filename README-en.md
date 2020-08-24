@@ -31,8 +31,9 @@ mob推送支持厂商通道推送, 但是推送延迟太大, 经测试小米推�
 |魅族推送| 支持 | 未开始 | 
 |极光推送| 支持 | 未开始 | 
 
-## 配置说明
-### 小米推送配置(*要先进行开发者认证*)
-1. 首先打开[小米推送官网](https://dev.mi.com/console/appservice/push.html)
-2. 创建应用, 填写应用信息
-3. 然后拿到appId和AppKey
+## 大致流程
+![流程图](other_file/厂商推送插件.png)
+
+参考[华为推送插件](https://github.com/HMS-Core/hms-flutter-plugin)
+
+:smile:  :hugs: [top](#smileys--emotion)  :mask: `:mask:`

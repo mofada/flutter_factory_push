@@ -182,7 +182,8 @@ object XiaoMiPushImplement {
      * 如果时间设置为0:00-0:00，就是暂停push推送服务，也可以直接调用pausePush()方法，其本质相同
      * 如果时间设置为0:00-23:59，就是恢复push推送服务，即全天接收push推送消息，也可以直接调用resumePush()方法，其本质相同
      */
-    fun setPushTime(context: Context, startHour: Int, startMinter: Int, endHour: Int, endMinter: Int) {
+    fun setPushTime(context: Context, startHour: Int, startMinter: Int, endHour: Int, endMinter: Int,result: MethodChannel.Result) {
         MiPushClient.setAcceptTime(context, startHour, startMinter, endHour, endMinter, null)
+        result.success(null)
     }
 }

@@ -19,6 +19,9 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
+    ///尽量保证接收消息在初始化前面, 防止token接收不到, 这里为了demo演示, 接收消息放到home
+//    FactoryPush.onPushReceiver(onEvent: (e) => print(e));
+
     ///初始化推送设置
     FactoryPush.setup(
       xiaomiAppId: "2882303761518576392",

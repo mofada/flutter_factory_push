@@ -23,7 +23,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar
 class FactoryPushPlugin : FlutterPlugin, MethodCallHandler {
     private lateinit var channel: MethodChannel
 
-    private lateinit var context: Context
+//    private lateinit var context: Context
 
     /**
      * 初始化
@@ -38,6 +38,10 @@ class FactoryPushPlugin : FlutterPlugin, MethodCallHandler {
     }
 
     companion object {
+        /**
+         * oppo回调接口没有context, 所以需要全局, 小本本记下来
+         */
+        lateinit var context: Context
 
         /**
          * 老版本的初始化
@@ -48,7 +52,7 @@ class FactoryPushPlugin : FlutterPlugin, MethodCallHandler {
             val pushPlugin = FactoryPushPlugin()
 
             channel.setMethodCallHandler(pushPlugin)
-            pushPlugin.context = registrar.context().applicationContext
+            context = registrar.context().applicationContext
 
             //消息接收注册
             ReceiverEvent.registerWith(registrar)

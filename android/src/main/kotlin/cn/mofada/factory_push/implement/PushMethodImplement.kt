@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.core.app.NotificationManagerCompat
+import cn.jpush.android.api.JPushInterface
 import cn.mofada.factory_push.constant.ArgumentName
 import cn.mofada.factory_push.util.ManufacturerUtil
 import io.flutter.plugin.common.MethodCall
@@ -76,6 +77,7 @@ object PushMethodImplement {
      * 设置别名
      * 小米: 设置推送别名
      * 华为: 不支持别名
+     * oppo: 服务端进行别名设置
      */
     fun setAlias(context: Context, call: MethodCall, result: MethodChannel.Result) {
         //检查参数
@@ -94,6 +96,7 @@ object PushMethodImplement {
      * 删除别名
      * 小米: 删除别名
      * 华为: 不支持别名
+     * oppo: 服务端进行别名设置
      */
     fun deleteAlias(context: Context, call: MethodCall, result: MethodChannel.Result) {
         if (!call.hasArgument(ArgumentName.ALIAS)) {
@@ -111,6 +114,7 @@ object PushMethodImplement {
      * 获取所有的别名
      * 小米: 获取所有设置的别名
      * 华为: 不支持别名
+     * oppo: 服务端进行别名设置
      */
     fun getAllAlias(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
@@ -122,6 +126,7 @@ object PushMethodImplement {
      * 清除所有别名
      * 小米: 清除所有设置的别名
      * 华为: 不支持别名
+     * oppo: 服务端进行别名设置
      */
     fun cleanAlias(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
@@ -134,6 +139,7 @@ object PushMethodImplement {
      * 添加标签
      * 小米: 订阅主题
      * 华为: 订阅主题
+     * oppo: 不支持
      */
     fun addTag(context: Context, call: MethodCall, result: MethodChannel.Result) {
         //检查参数
@@ -153,6 +159,7 @@ object PushMethodImplement {
      * 添加多个标签
      * 小米: 批量订阅主题
      * 华为: 批量订阅主题
+     * oppo: 不支持
      */
     fun addTags(context: Context, call: MethodCall, result: MethodChannel.Result) {
         //检查参数
@@ -172,6 +179,7 @@ object PushMethodImplement {
      * 删除标签
      * 小米: 取消订阅主题
      * 华为: 取消订阅主题
+     * oppo: 不支持
      */
     fun deleteTag(context: Context, call: MethodCall, result: MethodChannel.Result) {
         //检查参数
@@ -191,6 +199,7 @@ object PushMethodImplement {
      * 获取所有标签
      * 小米: 获取所有的订阅主题
      * 华为: 华为无此方法
+     * oppo: 不支持
      */
     fun getAllTag(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
@@ -202,6 +211,7 @@ object PushMethodImplement {
      * 清除所有的标签
      * 小米: 清除所有订阅的主题
      * 华为: 无此方法
+     * oppo: 不支持
      */
     fun cleanTag(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
@@ -214,6 +224,7 @@ object PushMethodImplement {
      * 清除指定id的通知
      * 小米: 清除指定id的通知
      * 华为: 无此方法
+     * oppo: 不支持
      */
     fun clearNotification(context: Context, call: MethodCall, result: MethodChannel.Result) {
         if (!call.hasArgument(ArgumentName.NOTIFY_ID)) {
@@ -231,6 +242,7 @@ object PushMethodImplement {
      * 清除所有的通知
      * 小米: 清除所有的通知
      * 华为: 无此方法
+     * oppo: 不支持
      */
     fun clearAllNotification(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
@@ -243,11 +255,13 @@ object PushMethodImplement {
      * 暂停推送
      * 小米: 暂停推送
      * 华为: 关闭消息显示
+     * oppo: 暂停推送
      */
     fun pausePush(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
             ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.pausePush(context)
             ManufacturerUtil.isHUAWEI() -> HuaWeiPushImplement.pausePush(context)
+            ManufacturerUtil.isOPPO() -> OppoPushImplement.pausePush(context)
         }
         result.success(null)
     }
@@ -261,6 +275,7 @@ object PushMethodImplement {
         when {
             ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.resumePush(context)
             ManufacturerUtil.isHUAWEI() -> HuaWeiPushImplement.resumePush(context)
+            ManufacturerUtil.isOPPO() -> OppoPushImplement.resumePush(context)
         }
         result.success(null)
     }
@@ -269,6 +284,7 @@ object PushMethodImplement {
      * 启用推送服务
      * 小米: 启用推送服务
      * 华为: 不支持此方法
+     * oppo: 不支持此方法
      */
     fun enablePush(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
@@ -281,6 +297,7 @@ object PushMethodImplement {
      * 禁用推送服务
      * 小米: 禁用推送服务
      * 华为: 不支持此方法
+     * oppo: 不支持此方法
      */
     fun disablePush(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
@@ -292,12 +309,14 @@ object PushMethodImplement {
     /**
      * 获取注册id
      * 小米: 获取注册id
-     * 华为: 获取token
+     * 华为: 获取token, 需要监听消息
+     * oppo: 获取注册id
      */
     fun getRegistrationId(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
             ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.getRegistrationId(context, result)
             ManufacturerUtil.isHUAWEI() -> HuaWeiPushImplement.getRegistrationId(context, result)
+            ManufacturerUtil.isOPPO() -> OppoPushImplement.getRegistrationId(context, result)
         }
     }
 
@@ -305,6 +324,7 @@ object PushMethodImplement {
      * 设置推送时间
      * 小米: 设置推送事件
      * 华为: 不支持此方法
+     * oppo: 设置推送时间
      */
     fun setPushTime(context: Context, call: MethodCall, result: MethodChannel.Result) {
         //开始时间
@@ -333,7 +353,8 @@ object PushMethodImplement {
         val endMinter = call.argument<Int>(ArgumentName.END_MINTER)
 
         when {
-            ManufacturerUtil.isXIAOMI() -> result.success(XiaoMiPushImplement.setPushTime(context, startHour!!, startMinter!!, endHour!!, endMinter!!))
+            ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.setPushTime(context, startHour!!, startMinter!!, endHour!!, endMinter!!,result)
+            ManufacturerUtil.isOPPO() -> OppoPushImplement.setPushTime(context, startHour!!, startMinter!!, endHour!!, endMinter!!,result)
         }
     }
 
@@ -348,25 +369,32 @@ object PushMethodImplement {
      * 打开通知栏
      */
     fun openNotification(context: Context, call: MethodCall, result: MethodChannel.Result) {
-        val intent = Intent()
-        when {
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
-                intent.action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
-                intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+        if (ManufacturerUtil.isOPPO()) {
+            //oppo的使用oppo去打开通知栏
+            OppoPushImplement.openNotification()
+        } else {
+//            JPushInterface.goToAppNotificationSettings(context)
+            val intent = Intent()
+            when {
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
+                    intent.action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
+                    intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                }
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> {
+                    intent.action = "android.settings.APP_NOTIFICATION_SETTINGS"
+                    intent.putExtra("app_package", context.packageName)
+                    intent.putExtra("app_uid", context.applicationInfo.uid)
+                }
+                else -> {
+                    intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                    intent.addCategory(Intent.CATEGORY_DEFAULT)
+
+                    intent.data = Uri.parse("package:" + context.packageName)
+                }
             }
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> {
-                intent.action = "android.settings.APP_NOTIFICATION_SETTINGS"
-                intent.putExtra("app_package", context.packageName)
-                intent.putExtra("app_uid", context.applicationInfo.uid)
-            }
-            else -> {
-                intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                intent.addCategory(Intent.CATEGORY_DEFAULT)
-                intent.data = Uri.parse("package:" + context.packageName)
-            }
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(intent)
         }
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        context.startActivity(intent)
 
         result.success(null)
     }

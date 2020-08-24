@@ -32,6 +32,7 @@ class _HomePageState extends State<HomePage> {
     initManufacturer();
 
     ///当接收到消息的时候
+    ///尽量保证接收消息在初始化前面, 防止token接收不到, 这里为了demo演示, 接收消息放到home
     FactoryPush.onPushReceiver(
         onEvent: (message) => print(message),
         onMessageReceiver: _onEvent,

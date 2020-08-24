@@ -1,7 +1,6 @@
 package cn.mofada.factory_push.receiver
 
-import android.util.Log
-import com.heytap.msp.push.HeytapPushManager
+import cn.mofada.factory_push.FactoryPushPlugin
 import com.heytap.msp.push.callback.ICallBackResultService
 
 /**
@@ -11,26 +10,23 @@ import com.heytap.msp.push.callback.ICallBackResultService
  * @description: Oppo服务接收类
  */
 class OppoPushReceiver : ICallBackResultService {
-    private val TAG = "OppoPushReceiver"
 
     override fun onGetPushStatus(code: Int, status: Int) {
-        Log.d(TAG, "onGetPushStatus() called with: p0 = $code, p1 = $status")
     }
 
     override fun onSetPushTime(code: Int, p1: String?) {
-        Log.d(TAG, "onSetPushTime() called with: p0 = $code, p1 = $p1")
     }
 
     override fun onGetNotificationStatus(code: Int, status: Int) {
-        Log.d(TAG, "onGetNotificationStatus() called with: p0 = $code, p1 = $status")
     }
 
     override fun onUnRegister(code: Int) {
-        Log.d(TAG, "onUnRegister() called with: p0 = $code")
     }
 
     override fun onRegister(code: Int, registerId: String?) {
-        Log.d(TAG, "onRegister() called with: p0 = $code, p1 = $registerId")
+        registerId?.let {
+            MessageReceiver.sendTokenIntent(FactoryPushPlugin.context, it)
+        }
     }
 
 }

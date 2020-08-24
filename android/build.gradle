@@ -51,4 +51,7 @@ dependencies {
     //oppo推送?? 无法依赖
 //    implementation 'com.heytap.mcssdk:mcssdk:2.1.0'
 //    implementation 'com.heytap.mcssdk:mcssdk:2.0.2'
+    //极光推送
+    implementation 'cn.jiguang.sdk:jpush:3.7.0'
+    implementation 'cn.jiguang.sdk:jcore:2.4.2'
 }
