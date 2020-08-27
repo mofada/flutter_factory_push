@@ -25,4 +25,11 @@ object VivoPushImplement {
             Log.d("TAG", "setup() called")
         }
     }
+
+    /**
+     * 关闭应用push开关，解除绑定应用，解绑后将收不到当前应用的推送消息。
+     */
+    fun stopPush(context: Context) {
+        PushClient.getInstance(context).turnOffPush { }
+    }
 }

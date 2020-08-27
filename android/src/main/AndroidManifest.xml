@@ -17,6 +17,25 @@
     <uses-permission android:name="${applicationId}.permission.MIPUSH_RECEIVE" />
 
     <application>
+        <activity
+            android:name=".activity.MessageActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/HuaWeiMessage">
+            <intent-filter>
+                <action android:name="com.suning.mobile.psc.yunxin.oppo.push" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="${applicationId}"
+                    android:path="/message"
+                    android:scheme="factory_push" />
+            </intent-filter>
+        </activity>
+
         <!--小米推送配置-->
         <service
             android:name="com.xiaomi.push.service.XMPushService"
@@ -83,24 +102,17 @@
             android:name="push_kit_auto_init_enabled"
             android:value="false" />
 
-        <activity
-            android:name=".activity.MessageActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/HuaWeiMessage">
+        <!--VIVO推送设置-->
+        <service
+            android:name="com.vivo.push.sdk.service.CommandClientService"
+            android:exported="true" />
+
+        <receiver android:name=".receiver.VivoPushReceiver">
             <intent-filter>
-                <action android:name="com.suning.mobile.psc.yunxin.oppo.push" />
-
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="${applicationId}"
-                    android:path="/message"
-                    android:scheme="factory_push" />
+                <!-- 接收push消息 -->
+                <action android:name="com.vivo.pushclient.action.RECEIVE" />
             </intent-filter>
-        </activity>
+        </receiver>
     </application>
 
 </manifest>
