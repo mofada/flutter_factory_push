@@ -19,6 +19,12 @@ class ArgumentName {
   ///oppo app secret
   static const String oppoAppSecret = "oppo_app_secret";
 
+  ///vivo app id
+  static const String vivoAppId = "vivo_app_id";
+
+  ///vivo app key
+  static const String vivoAppKey = "vivo_app_key";
+
   ///别名
   static const String alias = "alias";
 

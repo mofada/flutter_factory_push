@@ -46,5 +46,14 @@
         <meta-data
             android:name="com.huawei.hms.client.appid"
             android:value="102736937" />
+
+        <!--设置VIVO推送参数-->
+        <meta-data
+            android:name="com.vivo.push.app_id"
+            android:value="104304633" />
+
+        <meta-data
+            android:name="com.vivo.push.api_key"
+            android:value="22ed1558311e52c8a212cbf4772a3acf" />
     </application>
 </manifest>

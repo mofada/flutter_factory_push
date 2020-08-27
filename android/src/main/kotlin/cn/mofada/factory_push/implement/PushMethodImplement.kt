@@ -32,8 +32,8 @@ object PushMethodImplement {
 
         //如果是小米手机, 并且有小米的id和key
         if (ManufacturerUtil.isXIAOMI() &&
-                call.hasArgument(ArgumentName.XIAOMI_APP_ID) &&
-                call.hasArgument(ArgumentName.XIAOMI_APP_KEY)) {
+                call.argument<String>(ArgumentName.XIAOMI_APP_ID) != null &&
+                call.argument<String>(ArgumentName.XIAOMI_APP_KEY) != null) {
             //应用id
             val appId = call.argument<String>(ArgumentName.XIAOMI_APP_ID)
             //应用key
@@ -41,18 +41,27 @@ object PushMethodImplement {
             XiaoMiPushImplement.setup(context, appId!!, appKey!!, debugMode)
         }
         //华为手机, 华为推送
-        if (ManufacturerUtil.isHUAWEI() &&
-                call.hasArgument(ArgumentName.HUAWEI_APP_ID)) {
+        else if (ManufacturerUtil.isHUAWEI() &&
+                call.argument<String>(ArgumentName.HUAWEI_APP_ID) != null) {
             val appid = call.argument<String>(ArgumentName.HUAWEI_APP_ID)
             HuaWeiPushImplement.setup(context, appid!!)
         }
         //oppo手机
-        if (ManufacturerUtil.isOPPO() &&
-                call.hasArgument(ArgumentName.OPPO_APP_KEY) &&
-                call.hasArgument(ArgumentName.OPPO_APP_SECRET)) {
+        else if (ManufacturerUtil.isOPPO() &&
+                call.argument<String>(ArgumentName.OPPO_APP_KEY) != null &&
+                call.argument<String>(ArgumentName.OPPO_APP_SECRET) != null) {
             val appKey = call.argument<String>(ArgumentName.OPPO_APP_KEY)
             val appSecret = call.argument<String>(ArgumentName.OPPO_APP_SECRET)
             OppoPushImplement.setup(context, appKey!!, appSecret!!, debugMode)
+        }
+
+        //vivo
+        else if (ManufacturerUtil.isVIVO() &&
+                call.argument<String>(ArgumentName.VIVO_APP_ID) != null &&
+                call.argument<String>(ArgumentName.VIVO_APP_KEY) != null) {
+            val appId = call.argument<String>(ArgumentName.VIVO_APP_ID)
+            val appKey = call.argument<String>(ArgumentName.VIVO_APP_KEY)
+            VivoPushImplement.setup(context, appId!!, appKey!!, debugMode)
         }
         result.success(null)
     }
@@ -139,7 +148,7 @@ object PushMethodImplement {
      * 添加标签
      * 小米: 订阅主题
      * 华为: 订阅主题
-     * oppo: 不支持
+     * oppo: 服务端进行标签设置
      */
     fun addTag(context: Context, call: MethodCall, result: MethodChannel.Result) {
         //检查参数
@@ -159,7 +168,7 @@ object PushMethodImplement {
      * 添加多个标签
      * 小米: 批量订阅主题
      * 华为: 批量订阅主题
-     * oppo: 不支持
+     * oppo: 服务端进行标签设置
      */
     fun addTags(context: Context, call: MethodCall, result: MethodChannel.Result) {
         //检查参数
@@ -179,7 +188,7 @@ object PushMethodImplement {
      * 删除标签
      * 小米: 取消订阅主题
      * 华为: 取消订阅主题
-     * oppo: 不支持
+     * oppo: 服务端进行标签设置
      */
     fun deleteTag(context: Context, call: MethodCall, result: MethodChannel.Result) {
         //检查参数
@@ -199,7 +208,7 @@ object PushMethodImplement {
      * 获取所有标签
      * 小米: 获取所有的订阅主题
      * 华为: 华为无此方法
-     * oppo: 不支持
+     * oppo: 服务端进行标签设置
      */
     fun getAllTag(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
@@ -211,7 +220,7 @@ object PushMethodImplement {
      * 清除所有的标签
      * 小米: 清除所有订阅的主题
      * 华为: 无此方法
-     * oppo: 不支持
+     * oppo: 服务端进行标签设置
      */
     fun cleanTag(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
@@ -353,8 +362,8 @@ object PushMethodImplement {
         val endMinter = call.argument<Int>(ArgumentName.END_MINTER)
 
         when {
-            ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.setPushTime(context, startHour!!, startMinter!!, endHour!!, endMinter!!,result)
-            ManufacturerUtil.isOPPO() -> OppoPushImplement.setPushTime(context, startHour!!, startMinter!!, endHour!!, endMinter!!,result)
+            ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.setPushTime(context, startHour!!, startMinter!!, endHour!!, endMinter!!, result)
+            ManufacturerUtil.isOPPO() -> OppoPushImplement.setPushTime(context, startHour!!, startMinter!!, endHour!!, endMinter!!, result)
         }
     }
 

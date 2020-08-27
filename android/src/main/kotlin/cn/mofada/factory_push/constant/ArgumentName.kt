@@ -10,27 +10,37 @@ object ArgumentName {
     /**
      * 小米的应用id
      */
-    const val XIAOMI_APP_ID = "xiaomi_app_id";
+    const val XIAOMI_APP_ID = "xiaomi_app_id"
 
     /**
      * 小米的应用key
      */
-    const val XIAOMI_APP_KEY = "xiaomi_app_key";
+    const val XIAOMI_APP_KEY = "xiaomi_app_key"
 
     /**
      * 华为appid
      */
-    const val HUAWEI_APP_ID = "huawei_app_id";
+    const val HUAWEI_APP_ID = "huawei_app_id"
 
     /**
      * oppo app key
      */
-    const val OPPO_APP_KEY = "oppo_app_key";
+    const val OPPO_APP_KEY = "oppo_app_key"
 
     /**
      * oppo app secret
      */
-    const val OPPO_APP_SECRET = "oppo_app_secret";
+    const val OPPO_APP_SECRET = "oppo_app_secret"
+
+    /**
+     * vivo app id
+     */
+    const val VIVO_APP_ID = "vivo_app_id"
+
+    /**
+     * vivo app key
+     */
+    const val VIVO_APP_KEY = "vivo_app_key"
 
     /**
      * 别名

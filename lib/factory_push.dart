@@ -80,6 +80,8 @@ class FactoryPush {
   /// @param {String} [huaweiAppId] 华为的 appId
   /// @param {String} [oppoAppKey] oppo 的 oppoAppKey
   /// @param {String} [oppoAppSecret] oppo 的 oppoAppSecret
+  /// @param {String} [vivoAppId] vivo 的 vivoAppId
+  /// @param {String} [vivoAppKey] vivo 的 vivoAppKey
   /// @param {bool} [debugMode] true: 开启调试模式, false: 关闭调试模式
   static Future setup({
     String xiaomiAppId,
@@ -87,6 +89,8 @@ class FactoryPush {
     String huaweiAppId,
     String oppoAppKey,
     String oppoAppSecret,
+    String vivoAppId,
+    String vivoAppKey,
     bool debugMode = false,
   }) async {
     Map<String, dynamic> arguments = <String, dynamic>{};
@@ -101,6 +105,10 @@ class FactoryPush {
     ///Oppo
     arguments[ArgumentName.oppoAppKey] = oppoAppKey;
     arguments[ArgumentName.oppoAppSecret] = oppoAppSecret;
+
+    ///vivo
+    arguments[ArgumentName.vivoAppId] = vivoAppId;
+    arguments[ArgumentName.vivoAppKey] = vivoAppKey;
 
     ///是否调试
     arguments[ArgumentName.debugMode] = debugMode;
