@@ -29,6 +29,8 @@ class _MyAppState extends State<MyApp> {
       huaweiAppId: "102736937",
       oppoAppKey: "8053e8d8bc7142e1aa7dbee0cb708b6f",
       oppoAppSecret: "7c92f5fc05ac4c57b01a50f43b81c6a8",
+      vivoAppId: "104304633",
+      vivoAppKey: "22ed1558311e52c8a212cbf4772a3acf",
       debugMode: true,
     );
   }

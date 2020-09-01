@@ -40,6 +40,13 @@ android {
     lintOptions {
         disable 'InvalidPackage'
     }
+    //More than one file was found with OS independent path 'res/values/values.xml'
+    packagingOptions {
+        merge 'res/values/values.xml'
+        merge 'classes.jar'
+        merge 'AndroidManifest.xml'
+        merge 'R.txt'
+    }
 }
 
 dependencies {

@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.core.app.NotificationManagerCompat
-import cn.jpush.android.api.JPushInterface
 import cn.mofada.factory_push.constant.ArgumentName
 import cn.mofada.factory_push.util.ManufacturerUtil
 import io.flutter.plugin.common.MethodCall
@@ -70,13 +69,15 @@ object PushMethodImplement {
      * 停止推送
      * 小米: 注销推送, 停止推送
      * 华为: 删除Token
+     * oppo: 注销推送
+     * vivo: 注销推送
      */
     fun stopPush(context: Context, call: MethodCall, result: MethodChannel.Result) {
-        //小米推送
         when {
             ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.stopPush(context)
             ManufacturerUtil.isHUAWEI() -> HuaWeiPushImplement.stopPush(context)
             ManufacturerUtil.isOPPO() -> OppoPushImplement.stopPush(context)
+            ManufacturerUtil.isVIVO() -> VivoPushImplement.stopPush(context)
         }
         result.success(null)
     }
@@ -87,6 +88,7 @@ object PushMethodImplement {
      * 小米: 设置推送别名
      * 华为: 不支持别名
      * oppo: 服务端进行别名设置
+     * vivo: 设置别名
      */
     fun setAlias(context: Context, call: MethodCall, result: MethodChannel.Result) {
         //检查参数
@@ -97,6 +99,7 @@ object PushMethodImplement {
         val alias = call.argument<String>(ArgumentName.ALIAS)
         when {
             ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.setAlias(context, alias!!)
+            ManufacturerUtil.isVIVO() -> VivoPushImplement.setAlias(context, alias!!)
         }
         result.success(null)
     }
@@ -106,6 +109,7 @@ object PushMethodImplement {
      * 小米: 删除别名
      * 华为: 不支持别名
      * oppo: 服务端进行别名设置
+     * vivo: 删除别名
      */
     fun deleteAlias(context: Context, call: MethodCall, result: MethodChannel.Result) {
         if (!call.hasArgument(ArgumentName.ALIAS)) {
@@ -115,6 +119,7 @@ object PushMethodImplement {
         val alias = call.argument<String>(ArgumentName.ALIAS)
         when {
             ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.deleteAlias(context, alias!!)
+            ManufacturerUtil.isVIVO() -> VivoPushImplement.deleteAlias(context, alias!!)
         }
         result.success(null)
     }
@@ -124,10 +129,12 @@ object PushMethodImplement {
      * 小米: 获取所有设置的别名
      * 华为: 不支持别名
      * oppo: 服务端进行别名设置
+     * vivo: 获取所有的别名
      */
     fun getAllAlias(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
             ManufacturerUtil.isXIAOMI() -> result.success(XiaoMiPushImplement.getAllAlias(context))
+            ManufacturerUtil.isVIVO() -> result.success(VivoPushImplement.getAllAlias(context))
         }
     }
 
@@ -136,10 +143,12 @@ object PushMethodImplement {
      * 小米: 清除所有设置的别名
      * 华为: 不支持别名
      * oppo: 服务端进行别名设置
+     * vivo: 清除所有的别名
      */
     fun cleanAlias(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
             ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.cleanAlias(context)
+            ManufacturerUtil.isVIVO() -> VivoPushImplement.cleanAlias(context)
         }
         result.success(null)
     }
@@ -149,6 +158,7 @@ object PushMethodImplement {
      * 小米: 订阅主题
      * 华为: 订阅主题
      * oppo: 服务端进行标签设置
+     * vivo: 订阅主题
      */
     fun addTag(context: Context, call: MethodCall, result: MethodChannel.Result) {
         //检查参数
@@ -160,6 +170,7 @@ object PushMethodImplement {
         when {
             ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.addTag(context, tag!!)
             ManufacturerUtil.isHUAWEI() -> HuaWeiPushImplement.addTag(context, tag!!)
+            ManufacturerUtil.isVIVO() -> VivoPushImplement.addTag(context, tag!!)
         }
         result.success(null)
     }
@@ -169,6 +180,7 @@ object PushMethodImplement {
      * 小米: 批量订阅主题
      * 华为: 批量订阅主题
      * oppo: 服务端进行标签设置
+     * vivo: 批量添加主题
      */
     fun addTags(context: Context, call: MethodCall, result: MethodChannel.Result) {
         //检查参数
@@ -180,6 +192,7 @@ object PushMethodImplement {
         when {
             ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.addTags(context, tags!!)
             ManufacturerUtil.isHUAWEI() -> HuaWeiPushImplement.addTags(context, tags!!)
+            ManufacturerUtil.isVIVO() -> VivoPushImplement.addTags(context, tags!!)
         }
         result.success(null)
     }
@@ -189,6 +202,7 @@ object PushMethodImplement {
      * 小米: 取消订阅主题
      * 华为: 取消订阅主题
      * oppo: 服务端进行标签设置
+     * vivo: 删除主题
      */
     fun deleteTag(context: Context, call: MethodCall, result: MethodChannel.Result) {
         //检查参数
@@ -200,6 +214,7 @@ object PushMethodImplement {
         when {
             ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.deleteTag(context, tag!!)
             ManufacturerUtil.isHUAWEI() -> HuaWeiPushImplement.deleteTag(context, tag!!)
+            ManufacturerUtil.isVIVO() -> VivoPushImplement.deleteTag(context, tag!!)
         }
         result.success(null)
     }
@@ -209,10 +224,12 @@ object PushMethodImplement {
      * 小米: 获取所有的订阅主题
      * 华为: 华为无此方法
      * oppo: 服务端进行标签设置
+     * vivo: 获取所有的主题
      */
     fun getAllTag(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
             ManufacturerUtil.isXIAOMI() -> result.success(XiaoMiPushImplement.getAllTag(context))
+            ManufacturerUtil.isVIVO() -> result.success(VivoPushImplement.getAllTag(context))
         }
     }
 
@@ -221,10 +238,12 @@ object PushMethodImplement {
      * 小米: 清除所有订阅的主题
      * 华为: 无此方法
      * oppo: 服务端进行标签设置
+     * vivo: 删除所有的主题
      */
     fun cleanTag(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
             ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.clearTag(context)
+            ManufacturerUtil.isVIVO() -> VivoPushImplement.clearTag(context)
         }
         result.success(null)
     }
@@ -234,6 +253,7 @@ object PushMethodImplement {
      * 小米: 清除指定id的通知
      * 华为: 无此方法
      * oppo: 不支持
+     * vivo: 不支持
      */
     fun clearNotification(context: Context, call: MethodCall, result: MethodChannel.Result) {
         if (!call.hasArgument(ArgumentName.NOTIFY_ID)) {
@@ -252,6 +272,7 @@ object PushMethodImplement {
      * 小米: 清除所有的通知
      * 华为: 无此方法
      * oppo: 不支持
+     * vivo: 不支持
      */
     fun clearAllNotification(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
@@ -265,6 +286,7 @@ object PushMethodImplement {
      * 小米: 暂停推送
      * 华为: 关闭消息显示
      * oppo: 暂停推送
+     * vivo: 不支持
      */
     fun pausePush(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
@@ -279,6 +301,8 @@ object PushMethodImplement {
      * 恢复推送
      * 小米: 恢复推送
      * 华为: 打开通知栏消息
+     * oppo: 恢复推送
+     * vivo: 不支持
      */
     fun resumePush(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
@@ -294,6 +318,7 @@ object PushMethodImplement {
      * 小米: 启用推送服务
      * 华为: 不支持此方法
      * oppo: 不支持此方法
+     * vivo: 不支持此方法
      */
     fun enablePush(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
@@ -307,6 +332,7 @@ object PushMethodImplement {
      * 小米: 禁用推送服务
      * 华为: 不支持此方法
      * oppo: 不支持此方法
+     * vivo: 不支持此方法
      */
     fun disablePush(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
@@ -320,12 +346,14 @@ object PushMethodImplement {
      * 小米: 获取注册id
      * 华为: 获取token, 需要监听消息
      * oppo: 获取注册id
+     * vivo: 获取注册id
      */
     fun getRegistrationId(context: Context, call: MethodCall, result: MethodChannel.Result) {
         when {
             ManufacturerUtil.isXIAOMI() -> XiaoMiPushImplement.getRegistrationId(context, result)
             ManufacturerUtil.isHUAWEI() -> HuaWeiPushImplement.getRegistrationId(context, result)
             ManufacturerUtil.isOPPO() -> OppoPushImplement.getRegistrationId(context, result)
+            ManufacturerUtil.isVIVO() -> VivoPushImplement.getRegistrationId(context, result)
         }
     }
 
